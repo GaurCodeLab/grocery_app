@@ -9,7 +9,9 @@ import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
+import '../inner_screens/onsale_screen.dart';
 import '../provider/dark_theme_provider.dart';
+import '../services/global_methods.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -31,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final color = Utils(context).color;
 
     Size size = Utils(context).getScreenSize;
+
 
     return Scaffold(
       // appBar: AppBar(
@@ -65,7 +68,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            TextWidget(text: 'View all', color: Colors.blue, textSize: 22),
+            TextButton(
+              onPressed: (){
+                GlobalMethods.navigateTo(ctx: context, routeName: OnSaleScreen.routeName);
+
+                    
+              },
+              child: TextWidget(text: 'View all', color: Colors.blue, textSize: 22),
+            ),
+
             SizedBox(
               height: 5,
             ),

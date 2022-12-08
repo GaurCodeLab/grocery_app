@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
+import 'package:grocery_app/widgets/add_to_cart_dynamic_button.dart';
 
 class PriceWidget extends StatelessWidget {
   const PriceWidget(
@@ -10,8 +11,9 @@ class PriceWidget extends StatelessWidget {
       required this.textPrice,
       required this.isOnSale});
   final double salePrice, price;
-  final int textPrice;
+  final double textPrice ;
   final bool isOnSale;
+
 
   @override
   Widget build(BuildContext context) {

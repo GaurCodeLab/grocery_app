@@ -44,7 +44,7 @@ class _FeedWidgetState extends State<FeedWidget> {
               offset: const Offset(-2, -2),
               blurRadius: 10,
               spreadRadius: 0.5,
-            )
+            ),
           ],
         ),
         child: InkWell(
@@ -56,7 +56,6 @@ class _FeedWidgetState extends State<FeedWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -70,6 +69,7 @@ class _FeedWidgetState extends State<FeedWidget> {
                             width: size.width * 0.3,
                             boxFit: BoxFit.fill,
                           ),
+
                           // const SizedBox(
                           //   width: 35.0,
                           // ),
@@ -97,31 +97,35 @@ class _FeedWidgetState extends State<FeedWidget> {
                           isTitle: true,
                         ),
                       ),
-                      TextWidget(text: '\u{20B9}150/500gm', color: subtitleColor, textSize: 16,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          PriceWidget(
-                            price: 300,
-                            salePrice: 280 ,
-                            isOnSale: false,
-                            textPrice:  1,
-                          ),
-                          // const SizedBox(width: 20,),
-
-                          // GestureDetector(
-                          //   onTap: () {},
-                          //   child: Icon(
-                          //     IconlyLight.plus,
-                          //     size: 22,
-                          //     color: color,
-                          //   ),
-                          // ),
-                        ],
+                      TextWidget(
+                        text: '\u{20B9}150/500gm',
+                        color: subtitleColor,
+                        textSize: 16,
                       ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: const [
+                      //     PriceWidget(
+                      //       price: 300,
+                      //       salePrice: 280,
+                      //       isOnSale: false,
+                      //       textPrice: 1,
+                      //     ),
+                      //     // const SizedBox(width: 20,),
+                      //
+                      //     // GestureDetector(
+                      //     //   onTap: () {},
+                      //     //   child: Icon(
+                      //     //     IconlyLight.plus,
+                      //     //     size: 22,
+                      //     //     color: color,
+                      //     //   ),
+                      //     // ),
+                      //   ],
+                      // ),
                       const Padding(
-                        padding:  EdgeInsets.only(left: 40.0, top:5, bottom: 5),
-                        child:  AddToCartButton(),
+                        padding: EdgeInsets.only(left: 40.0, top: 10, bottom: 5),
+                        child: AddToCartButton(),
                       ),
                     ],
                   ),

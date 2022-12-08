@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:grocery_app/services/utils.dart';
+import 'package:grocery_app/widgets/price_widget.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +8,8 @@ import '../provider/dark_theme_provider.dart';
 
 class AddToCartButton extends StatefulWidget {
   const AddToCartButton({Key? key}) : super(key: key);
+
+
 
 
   @override
@@ -96,6 +97,7 @@ class _AddToCartButtonState extends State<AddToCartButton> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+
                   IconButton(
                     icon: Icon(
                       Icons.remove_circle_rounded,
@@ -105,12 +107,14 @@ class _AddToCartButtonState extends State<AddToCartButton> {
                     onPressed: () {
                       setState(() {
                         quantity--;
+
+
                       });
                     },
                   ),
                   Text(
                     quantity.toString(),
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
                   IconButton(
                     icon: Icon(
