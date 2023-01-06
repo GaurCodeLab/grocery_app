@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:grocery_app/inner_screens/product_details_screen.dart';
+import 'package:grocery_app/screens/wishlist/wishlist_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'consts/theme_data.dart';
+import 'inner_screens/feedsScreen.dart';
 import 'inner_screens/onsale_screen.dart';
 import 'provider/dark_theme_provider.dart';
 import 'screens/bottom_bar_scren.dart';
@@ -53,6 +56,9 @@ class _MyAppState extends State<MyApp> {
           home: const BottomBarScreen(),
           routes: {
             OnSaleScreen.routeName : (ctx) => const OnSaleScreen(),
+            FeedsScreen.routeName : (ctx) => const FeedsScreen(),
+            ProductDetails.routeName : (ctx) => const ProductDetails(),
+            WishlistScreen.routeName : (ctx) => const WishlistScreen(),
           },
         );
 

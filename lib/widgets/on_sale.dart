@@ -8,6 +8,9 @@ import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
+import '../inner_screens/product_details_screen.dart';
+import '../services/global_methods.dart';
+
 class OnSaleWidget extends StatefulWidget {
   const OnSaleWidget({super.key});
 
@@ -51,7 +54,10 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
-          onTap: () {},
+          onTap: () {
+            GlobalMethods.navigateTo(
+                ctx: context, routeName: ProductDetails.routeName);
+          },
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0, top: 8.0),
             child: Row(

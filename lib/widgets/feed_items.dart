@@ -2,11 +2,14 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart ';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
+import 'package:grocery_app/services/global_methods.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/add_to_cart_dynamic_button.dart';
 import 'package:grocery_app/widgets/price_widget.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
+
+import '../inner_screens/product_details_screen.dart';
 
 class FeedWidget extends StatefulWidget {
   const FeedWidget({Key? key}) : super(key: key);
@@ -48,7 +51,10 @@ class _FeedWidgetState extends State<FeedWidget> {
           ],
         ),
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            GlobalMethods.navigateTo(
+                ctx: context, routeName: ProductDetails.routeName);
+          },
           borderRadius: BorderRadius.circular(30),
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0, top: 8.0),

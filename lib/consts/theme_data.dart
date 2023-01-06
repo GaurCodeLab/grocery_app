@@ -12,7 +12,7 @@ class Styles {
             brightness: isDarkTheme ? Brightness.dark : Brightness.light,
           ),
       cardColor:
-          isDarkTheme ?  Colors.grey[900] : Colors.grey[300],
+          isDarkTheme ?  Colors.grey[900] : Colors.grey[350],
       canvasColor: isDarkTheme ? Colors.black : Colors.grey[50],
       buttonTheme: Theme.of(context).buttonTheme.copyWith(
           colorScheme: isDarkTheme

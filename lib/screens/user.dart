@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:grocery_app/screens/wishlist/wishlist_screen.dart';
+import 'package:grocery_app/services/global_methods.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:grocery_app/widgets/user_screen_listtile.dart';
 import 'package:provider/provider.dart';
@@ -84,7 +86,10 @@ class _UserScreenState extends State<UserScreen> {
                 listTile(
                   leadinIcon: IconlyLight.heart,
                   title: 'Wishlist',
-                  onPressed: () {},
+                  onPressed: () {
+                    GlobalMethods.navigateTo(
+                        ctx: context, routeName: WishlistScreen.routeName);
+                  },
                   color: color,
                 ),
                 listTile(
@@ -114,47 +119,19 @@ class _UserScreenState extends State<UserScreen> {
                     });
                   },
                   value: themeState.getDarkTheme,
-                  activeColor: themeState.getDarkTheme ? Colors.grey[500] : Colors.grey[300],
+                  activeColor: themeState.getDarkTheme
+                      ? Colors.grey[500]
+                      : Colors.grey[300],
                 ),
                 listTile(
                   leadinIcon: IconlyLight.logout,
                   title: 'Logout',
                   onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            title: Row(children: const [
-                              Icon(Icons.logout_rounded),
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text('Sign out'),
-                              ),
-                            ]),
-                            content: Text('Do you want to Sign out?',
-                                style: TextStyle(fontSize: 18.0),),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    if (Navigator.canPop(context)) {
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                  child: Text('cancel',
-                                      style: TextStyle(fontSize: 18.0),),),
-                              TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  'ok',
-                                  style: TextStyle(fontSize: 18.0),
-                                ),
-                              ),
-                            ],
-                          );
-                        });
+                    GlobalMethods.warningDialog(
+                        title: 'Logout',
+                        subtitle: 'Do want to sign out?',
+                        fct: () {},
+                        context: context);
                   },
                   color: color,
                 ),

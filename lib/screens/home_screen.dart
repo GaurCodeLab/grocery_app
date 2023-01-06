@@ -9,6 +9,7 @@ import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
+import '../inner_screens/feedsScreen.dart';
 import '../inner_screens/onsale_screen.dart';
 import '../provider/dark_theme_provider.dart';
 import '../services/global_methods.dart';
@@ -140,7 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    GlobalMethods.navigateTo(ctx: context, routeName: FeedsScreen.routeName);
+                  },
                   child: TextWidget(
                     text: 'See all',
                     color: Colors.blue,
