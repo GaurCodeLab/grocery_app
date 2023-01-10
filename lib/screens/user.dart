@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:grocery_app/screens/orders/orders_screen.dart';
+import 'package:grocery_app/screens/viewed_recently/viewed_recently_screen.dart';
 import 'package:grocery_app/screens/wishlist/wishlist_screen.dart';
 import 'package:grocery_app/services/global_methods.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
@@ -80,7 +82,10 @@ class _UserScreenState extends State<UserScreen> {
                 listTile(
                   leadinIcon: IconlyLight.wallet,
                   title: 'Orders',
-                  onPressed: () {},
+                  onPressed: () {
+                    GlobalMethods.navigateTo(
+                        ctx: context, routeName: OrderScreen.routeName);
+                  },
                   color: color,
                 ),
                 listTile(
@@ -95,7 +100,10 @@ class _UserScreenState extends State<UserScreen> {
                 listTile(
                   leadinIcon: Icons.remove_red_eye_outlined,
                   title: 'Viewed',
-                  onPressed: () {},
+                  onPressed: () {
+                    GlobalMethods.navigateTo(
+                        ctx: context, routeName: ViewedRecentlyScreen.routeName);
+                  },
                   color: color,
                 ),
                 listTile(

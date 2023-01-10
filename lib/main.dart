@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grocery_app/inner_screens/product_details_screen.dart';
+import 'package:grocery_app/screens/orders/orders_screen.dart';
+import 'package:grocery_app/screens/viewed_recently/viewed_recently_screen.dart';
 import 'package:grocery_app/screens/wishlist/wishlist_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -59,6 +61,8 @@ class _MyAppState extends State<MyApp> {
             FeedsScreen.routeName : (ctx) => const FeedsScreen(),
             ProductDetails.routeName : (ctx) => const ProductDetails(),
             WishlistScreen.routeName : (ctx) => const WishlistScreen(),
+            OrderScreen.routeName : (ctx) => const OrderScreen(),
+            ViewedRecentlyScreen.routeName : (ctx) => const ViewedRecentlyScreen(),
           },
         );
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
 import 'package:grocery_app/screens/cart/cart_widget.dart';
+import 'package:grocery_app/widgets/empty_screen.dart';
 import 'package:grocery_app/services/global_methods.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
@@ -15,7 +16,13 @@ class CartScreen extends StatelessWidget {
     final Color color = Utils(context).color;
     final themeState = Provider.of<DarkThemeProvider>(context);
     Size size = Utils(context).getScreenSize;
-    return Scaffold(
+    bool _isEmpty = true;
+    return _isEmpty ? const  EmptyScreen(
+      title: 'Your cart is empty!',
+      subtitle: 'Add something in your cart',
+        buttonText: 'Shop now',
+      imagePath: 'assets/images/cart.png',
+    ) : Scaffold(
       appBar: AppBar(
         backgroundColor: themeState.getDarkTheme ? Colors.black : Colors.white,
         title: TextWidget(
