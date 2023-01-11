@@ -1,13 +1,14 @@
-
-import'package:flutter/material.dart';
+import 'package:badges/badges.dart' as badge;
+import 'package:badges/badges.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
 import 'package:grocery_app/screens/home_screen.dart';
+import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:grocery_app/screens/cart/cart_screen.dart';
-import 'category.dart';
-import 'user.dart';
-
+import 'package:grocery_app/screens/category.dart';
+import 'package:grocery_app/screens/user.dart';
 
 class BottomBarScreen extends StatefulWidget {
   const BottomBarScreen({super.key});
@@ -21,7 +22,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   final List<Map<String, dynamic>> _pages = [
     {'page': const HomeScreen(), 'title': 'Home Screen'},
-    {'page':  CategoryScreen(),  'title': 'Categories Screen'},
+    {'page': CategoryScreen(), 'title': 'Categories Screen'},
     {'page': const CartScreen(), 'title': 'Cart Screen'},
     {'page': const UserScreen(), 'title': 'User Screen'},
   ];
@@ -63,12 +64,22 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               _selectedIndex == 1 ? IconlyBold.category : IconlyLight.category,
               color: Colors.teal,
             ),
-            label: 'Catgories',
+            label: 'Categories',
           ),
           BottomNavigationBarItem(
-            icon: Icon(_selectedIndex == 2 ? IconlyBold.buy : IconlyLight.buy,
-                color: Colors.teal),
-            label: 'Cart',
+            icon: badge.Badge(
+              toAnimate: true,
+              shape: BadgeShape.circle,
+              badgeColor: Colors.blue,
+              borderRadius: BorderRadius.circular(8),
+              position: BadgePosition.topEnd(top: -7, end: -7),
+              badgeContent: FittedBox(
+                child: TextWidget(text: '1', color: Colors.white, textSize: 15),
+              ),
+              child:
+                  Icon(_selectedIndex == 2 ? IconlyBold.buy : IconlyLight.buy),
+            ),
+            label: "Cart",
           ),
           BottomNavigationBarItem(
             icon: Icon(
