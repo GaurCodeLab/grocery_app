@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart%20';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:grocery_app/consts/constss.dart';
+import 'package:grocery_app/models/products_model.dart';
+import 'package:grocery_app/provider/products_provider.dart';
 import 'package:grocery_app/widgets/back_widget.dart';
 import 'package:grocery_app/widgets/feed_items.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +37,8 @@ class _FeedsScreenState extends State<FeedsScreen> {
     final Color color = Utils(context).color;
     final themeState = Provider.of<DarkThemeProvider>(context);
     Size size = Utils(context).getScreenSize;
+    final productProviders = Provider.of<ProductsProvider>(context);
+    List<ProductModel> allProducts = productProviders.getProducts;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -117,7 +122,7 @@ class _FeedsScreenState extends State<FeedsScreen> {
                               : color,
                         ),
                         onPressed: () {
-                          _searchTextController!.clear();
+                          _searchTextController.clear();
                           _searchTextFocusNode.unfocus();
                         },
                       ),
@@ -134,8 +139,13 @@ class _FeedsScreenState extends State<FeedsScreen> {
               crossAxisCount: 2,
               physics: const NeverScrollableScrollPhysics(),
               childAspectRatio: size.width / (size.height * 0.70),
-              children: List.generate(16, (index) {
-                return const FeedWidget();
+              children: List.generate(allProducts.length, (index) {
+                return  ChangeNotifierProvider.value(
+                  value: allProducts[index],
+                  child: FeedWidget(
+
+                  ),
+                );
               }),
             ),
           ],

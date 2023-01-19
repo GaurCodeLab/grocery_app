@@ -2,6 +2,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_app/consts/constss.dart';
+import 'package:grocery_app/screens/auth/forget_password_screen.dart';
 import 'package:grocery_app/screens/auth/register.dart';
 import 'package:grocery_app/services/global_methods.dart';
 import 'package:grocery_app/widgets/auth_button.dart';
@@ -10,6 +11,7 @@ import 'package:grocery_app/widgets/text_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/LoginScreen';
+
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
@@ -170,7 +172,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.topRight,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        GlobalMethods.navigateTo(
+                            ctx: context,
+                            routeName: ForgetPasswordScreen.routeName);
+                      },
                       child: const Text(
                         'Forget password?',
                         maxLines: 1,
@@ -186,10 +192,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 10,
                   ),
                   AuthButton(
-                      fct: () {},
-                      buttonTextColor: Colors.white,
-                      buttonText: 'Login',
-                      primary: Colors.grey.shade300.withOpacity(0.6)),
+                    fct: _submitFormOnLogin,
+                    buttonTextColor: Colors.white,
+                    buttonText: 'Login',
+                    primary: Colors.grey.shade300.withOpacity(0.6),
+                  ),
                   const SizedBox(
                     height: 10,
                   ),

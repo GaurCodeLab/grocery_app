@@ -96,7 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 50,
                 ),
                 TextWidget(
-                  text: 'Welcome ',
+                  text: 'Create new account ',
                   color: Colors.white,
                   textSize: 30,
                   isTitle: true,

@@ -3,6 +3,8 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/consts/constss.dart';
+import 'package:grocery_app/models/products_model.dart';
+import 'package:grocery_app/provider/products_provider.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/feed_items.dart';
 import 'package:grocery_app/widgets/on_sale.dart';
@@ -30,16 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final color = Utils(context).color;
 
     Size size = Utils(context).getScreenSize;
-
+    final productProviders = Provider.of<ProductsProvider>(context);
+    List<ProductModel> allProducts = productProviders.getProducts;
+    List<ProductModel> productsOnSale = productProviders.getOnSaleProducts;
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: TextWidget(
-      //       text: 'Grocery Shop',
-      //       color: themeState.getDarkTheme ? Colors.white : Colors.black,
-      //       textSize: 24),
-      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      // ),
+
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -108,12 +106,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: SizedBox(
                       height: size.height * 0.22,
                       child: ListView.builder(
-                          itemCount: 10,
+                          itemCount: productsOnSale.length < 10 ? productsOnSale.length : 10,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (ctx, index) {
-                            return const Padding(
+                            return  Padding(
                               padding: EdgeInsets.all(10.0),
-                              child: OnSaleWidget(),
+                              child: ChangeNotifierProvider.value(
+                                  value: productsOnSale[index],
+                                  child: OnSaleWidget(),),
                             );
                           }),
                     ),
@@ -150,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             Padding(
-              padding:  EdgeInsets.zero,
+              padding:  EdgeInsets.symmetric(horizontal: 8.0),
               child: GridView.count(
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20,
@@ -158,8 +158,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: NeverScrollableScrollPhysics(),
                 crossAxisCount: 2,
                 childAspectRatio: size.width /(size.height*0.70),
-                children:  List.generate(4, (index) {
-                  return FeedWidget();
+                children:  List.generate(allProducts.length < 4 ? allProducts.length : 4, (index) {
+                  return ChangeNotifierProvider.value(
+                    value: allProducts[index],
+                    child: FeedWidget(
+
+
+                    ),
+                  );
                 }),
               ),
             ),

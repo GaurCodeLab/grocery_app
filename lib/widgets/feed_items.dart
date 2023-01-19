@@ -1,10 +1,12 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart ';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:grocery_app/models/products_model.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
 import 'package:grocery_app/services/global_methods.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/add_to_cart_dynamic_button.dart';
+import 'package:grocery_app/widgets/add_to_wishlist_btn.dart';
 import 'package:grocery_app/widgets/price_widget.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
@@ -12,18 +14,35 @@ import 'package:provider/provider.dart';
 import '../inner_screens/product_details_screen.dart';
 
 class FeedWidget extends StatefulWidget {
-  const FeedWidget({Key? key}) : super(key: key);
+   FeedWidget({ Key? key}) : super(key: key);
+
 
   @override
   State<FeedWidget> createState() => _FeedWidgetState();
 }
 
 class _FeedWidgetState extends State<FeedWidget> {
+  final _quantityTextController = TextEditingController();
+
+  @override
+  void initState() {
+    _quantityTextController.text = '1';
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _quantityTextController.dispose();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final Color titlecolor = Utils(context).titleColor;
     final Color subtitleColor = Utils(context).subtitleColor;
     final themeState = Provider.of<DarkThemeProvider>(context);
+    final productModel = Provider.of<ProductModel>(context);
     Size size = Utils(context).getScreenSize;
     final Color color = Utils(context).color;
     return Material(
@@ -66,47 +85,48 @@ class _FeedWidgetState extends State<FeedWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          FancyShimmerImage(
-                            imageUrl: 'https://i.ibb.co/F0s3FHQ/Apricots.png',
-                            height: size.height * 0.15,
-                            width: size.width * 0.3,
-                            boxFit: BoxFit.fill,
-                          ),
-
-                          // const SizedBox(
-                          //   width: 35.0,
-                          // ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 15.0, right: 10, bottom: 80),
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: Icon(
-                                IconlyLight.heart,
-                                size: 24,
-                                color: color,
-                              ),
-                              // padding: EdgeInsets.only(left:20.0, right: 10),
+                      Flexible(
+                        flex: 2,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FancyShimmerImage(
+                              imageUrl: productModel.imageUrl,
+                              height: size.height * 0.15,
+                              width: size.width * 0.3,
+                              boxFit: BoxFit.fill,
                             ),
-                          ),
-                        ],
+
+                            // const SizedBox(
+                            //   width: 35.0,
+                            // ),
+                            const Flexible(
+                              flex: 1,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: 5.0, right: 10, bottom: 80),
+                                 child : AddToWishlistButton(),
+
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: TextWidget(
-                          text: 'Apricot',
+                          text: productModel.title,
                           color: titlecolor,
                           textSize: 18,
                           isTitle: true,
                         ),
                       ),
-                      TextWidget(
-                        text: '\u{20B9}150/500gm',
-                        color: subtitleColor,
-                        textSize: 16,
+                      PriceWidget(
+                        salePrice: productModel.salePrice,
+                        price: productModel.price,
+                        isOnSale: true,
+
+
                       ),
                       // Row(
                       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,

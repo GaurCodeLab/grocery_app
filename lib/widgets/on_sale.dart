@@ -1,8 +1,10 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:grocery_app/models/products_model.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
 import 'package:grocery_app/services/utils.dart';
+import 'package:grocery_app/widgets/add_to_wishlist_btn.dart';
 import 'package:grocery_app/widgets/price_widget.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +21,20 @@ class OnSaleWidget extends StatefulWidget {
 }
 
 class _OnSaleWidgetState extends State<OnSaleWidget> {
+  final _quantityTextController = TextEditingController();
+
+  @override
+  void initState() {
+    _quantityTextController.text = '1';
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _quantityTextController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Color Titlecolor = Utils(context).titleColor;
@@ -26,6 +42,7 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
     final themeState = Provider.of<DarkThemeProvider>(context);
     final Color color = Utils(context).color;
     bool isfavourite = false;
+    final productModel = Provider.of<ProductModel>(context);
 
     Size size = Utils(context).getScreenSize;
     return Material(
@@ -70,11 +87,11 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         FancyShimmerImage(
-                          imageUrl: 'https://i.ibb.co/F0s3FHQ/Apricots.png',
+                          imageUrl: productModel.imageUrl,
                           height: size.height * 0.12,
-                          width: size.width*0.25,
+                          width: size.width * 0.25,
                           boxFit: BoxFit.fill,
-                          ),
+                        ),
                         // Image.network(
                         //   'https://i.ibb.co/F0s3FHQ/Apricots.png',
                         //   height: size.height * 0.12,
@@ -86,14 +103,7 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                             const SizedBox(
                               width: 70.0,
                             ),
-                            GestureDetector(
-                              onTap: () {},
-                              child: Icon(
-                                IconlyLight.heart,
-                                size: 22,
-                                color: color,
-                              ),
-                            ),
+                            const AddToWishlistButton(),
                             const SizedBox(
                               height: 20.0,
                             ),
@@ -112,17 +122,16 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                     Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: TextWidget(
-                        text: 'Apricot',
+                        text: productModel.title,
                         color: Titlecolor,
                         textSize: 18,
                         isTitle: true,
                       ),
                     ),
-                    const PriceWidget(
-                      price: 300,
-                      salePrice: 280 ,
+                    PriceWidget(
+                      price: productModel.price,
+                      salePrice: productModel.salePrice,
                       isOnSale: true,
-                      textPrice:  1,
                     ),
                   ],
                 ),

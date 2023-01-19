@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grocery_app/inner_screens/product_details_screen.dart';
+import 'package:grocery_app/provider/products_provider.dart';
+import 'package:grocery_app/screens/auth/forget_password_screen.dart';
 import 'package:grocery_app/screens/auth/login_screen.dart';
 import 'package:grocery_app/screens/auth/register.dart';
 import 'package:grocery_app/screens/orders/orders_screen.dart';
@@ -49,7 +51,8 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (_) {
           return themeChangeProvider;
-        })
+        }),
+        ChangeNotifierProvider(create: (_) => ProductsProvider(),),
       ],
       child:
           Consumer<DarkThemeProvider>(builder: (context, themeProvider, child) {
@@ -57,7 +60,7 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: Styles.themeData(themeProvider.getDarkTheme, context),
-          home: const LoginScreen(),
+          home: const BottomBarScreen(),
           routes: {
             OnSaleScreen.routeName: (ctx) => const OnSaleScreen(),
             FeedsScreen.routeName: (ctx) => const FeedsScreen(),
@@ -68,6 +71,8 @@ class _MyAppState extends State<MyApp> {
                 const ViewedRecentlyScreen(),
             RegisterScreen.routeName: (ctx) => const RegisterScreen(),
             LoginScreen.routeName: (ctx) => const LoginScreen(),
+            ForgetPasswordScreen.routeName: (ctx) =>
+                const ForgetPasswordScreen(),
           },
         );
       }),

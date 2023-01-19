@@ -8,10 +8,10 @@ class PriceWidget extends StatelessWidget {
       {super.key,
       required this.salePrice,
       required this.price,
-      required this.textPrice,
+
       required this.isOnSale});
   final double salePrice, price;
-  final double textPrice ;
+
   final bool isOnSale;
 
 
@@ -28,7 +28,7 @@ class PriceWidget extends StatelessWidget {
         Visibility(
           visible: isOnSale ? true :false,
           child: Text(
-            '\u{20B9}${(price * textPrice)}',
+            '\u{20B9}$salePrice',
             style: TextStyle(
                 fontSize: 15,
                 color: color,
@@ -36,7 +36,7 @@ class PriceWidget extends StatelessWidget {
           ),
         ),
         TextWidget(
-          text: '\u{20B9}${(userPrice * textPrice)}',
+          text: '\u{20B9}$price',
           color: Colors.green,
           textSize: 18,
           isTitle: true,
