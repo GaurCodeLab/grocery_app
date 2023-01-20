@@ -71,8 +71,9 @@ class _FeedWidgetState extends State<FeedWidget> {
         ),
         child: InkWell(
           onTap: () {
-            GlobalMethods.navigateTo(
-                ctx: context, routeName: ProductDetails.routeName);
+            // GlobalMethods.navigateTo(
+            //     ctx: context, routeName: ProductDetails.routeName);
+            Navigator.pushNamed(context, ProductDetails.routeName, arguments: productModel.id);
           },
           borderRadius: BorderRadius.circular(30),
           child: Padding(

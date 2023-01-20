@@ -72,8 +72,10 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
           onTap: () {
-            GlobalMethods.navigateTo(
-                ctx: context, routeName: ProductDetails.routeName);
+            // GlobalMethods.navigateTo(
+            //     ctx: context, routeName: ProductDetails.routeName);
+
+            Navigator.pushNamed(context, ProductDetails.routeName, arguments: productModel.id);
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0, top: 8.0),

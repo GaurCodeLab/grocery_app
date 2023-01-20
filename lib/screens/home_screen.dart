@@ -25,7 +25,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   Widget build(BuildContext context) {
     final themeState = Provider.of<DarkThemeProvider>(context);
@@ -37,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
     List<ProductModel> productsOnSale = productProviders.getOnSaleProducts;
 
     return Scaffold(
-
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -64,14 +62,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             TextButton(
-              onPressed: (){
-                GlobalMethods.navigateTo(ctx: context, routeName: OnSaleScreen.routeName);
-
-                    
+              onPressed: () {
+                GlobalMethods.navigateTo(
+                    ctx: context, routeName: OnSaleScreen.routeName);
               },
-              child: TextWidget(text: 'View all', color: Colors.blue, textSize: 22),
+              child: TextWidget(
+                  text: 'View all', color: Colors.blue, textSize: 22),
             ),
-
             SizedBox(
               height: 5,
             ),
@@ -106,29 +103,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: SizedBox(
                       height: size.height * 0.22,
                       child: ListView.builder(
-                          itemCount: productsOnSale.length < 10 ? productsOnSale.length : 10,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (ctx, index) {
-                            return  Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: ChangeNotifierProvider.value(
-                                  value: productsOnSale[index],
-                                  child: OnSaleWidget(),),
-                            );
-                          }),
+                        itemCount: productsOnSale.length < 10
+                            ? productsOnSale.length
+                            : 10,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (ctx, index) {
+                          return Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: ChangeNotifierProvider.value(
+                              value: productsOnSale[index],
+                              child: OnSaleWidget(),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-
-            SizedBox(width:5),
+            SizedBox(width: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-
                 Padding(
-                  padding: const EdgeInsets.only(left:8.0),
+                  padding: const EdgeInsets.only(left: 8.0),
                   child: TextWidget(
                     text: 'Our Products',
                     color: color,
@@ -138,7 +137,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    GlobalMethods.navigateTo(ctx: context, routeName: FeedsScreen.routeName);
+                    GlobalMethods.navigateTo(
+                        ctx: context, routeName: FeedsScreen.routeName);
                   },
                   child: TextWidget(
                     text: 'See all',
@@ -148,23 +148,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ],
             ),
-
             Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: GridView.count(
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 crossAxisCount: 2,
-                childAspectRatio: size.width /(size.height*0.70),
-                children:  List.generate(allProducts.length < 4 ? allProducts.length : 4, (index) {
+                childAspectRatio: size.width / (size.height * 0.70),
+                children: List.generate(
+                    allProducts.length < 4 ? allProducts.length : 4, (index) {
                   return ChangeNotifierProvider.value(
                     value: allProducts[index],
-                    child: FeedWidget(
-
-
-                    ),
+                    child: FeedWidget(),
                   );
                 }),
               ),

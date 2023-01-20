@@ -5,9 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
+import 'package:grocery_app/provider/products_provider.dart';
 import 'package:grocery_app/screens/cart/cart_widget.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/add_quantity_widget.dart';
+import 'package:grocery_app/widgets/add_to_wishlist_btn.dart';
 import 'package:grocery_app/widgets/back_widget.dart';
 import 'package:grocery_app/widgets/quantity_controller_widget.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
@@ -43,7 +45,15 @@ class _ProductDetailsState extends State<ProductDetails> {
     final Color subtitleColor = Utils(context).subtitleColor;
     Size size = Utils(context).getScreenSize;
     final themeState = Provider.of<DarkThemeProvider>(context);
+    final productProviders = Provider.of<ProductsProvider>(context);
+    final productId = ModalRoute.of(context)!.settings.arguments as String;
 
+    final getCurrentProduct = productProviders.findProductById(productId);
+    double usedPrice = getCurrentProduct.isOnSale
+        ? getCurrentProduct.salePrice
+        : getCurrentProduct.price;
+
+    double totalPrice = usedPrice * double.parse(_quantityTextController.text);
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -59,7 +69,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           Flexible(
             flex: 2,
             child: FancyShimmerImage(
-              imageUrl: 'https://i.ibb.co/F0s3FHQ/Apricots.png',
+              imageUrl: getCurrentProduct.imageUrl,
               boxFit: BoxFit.scaleDown,
               width: size.width,
             ),
@@ -89,7 +99,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             Row(
                               children: [
                                 TextWidget(
-                                  text: 'Title',
+                                  text: getCurrentProduct.title,
                                   color: color,
                                   textSize: 25,
                                   isTitle: true,
@@ -102,7 +112,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             Row(
                               children: [
                                 TextWidget(
-                                  text: '\u{20B9}150',
+                                  text: '\u{20B9}$usedPrice',
                                   color: Colors.green,
                                   textSize: 22,
                                   isTitle: true,
@@ -119,7 +129,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 Visibility(
                                   visible: true,
                                   child: Text(
-                                    '\u{20B9}130',
+                                    '\u{20B9}$usedPrice',
                                     style:
                                         TextStyle(fontSize: 16, color: color),
                                   ),
@@ -130,15 +140,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                         Column(
                           children: [
-                            GestureDetector(
-                              onTap: () {},
-                              child: Icon(
-                                IconlyLight.heart,
-                                size: 24,
-                                color: color,
-                              ),
-                              // padding: EdgeInsets.only(left:20.0, right: 10),
-                            ),
+                           const AddToWishlistButton(),
                             const SizedBox(
                               height: 20,
                             ),
@@ -246,15 +248,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                             Row(
                               children: [
                                 TextWidget(
-                                  text: '\u{20B9}150/',
+                                  text: '\u{20B9}$totalPrice',
                                   color: color,
                                   textSize: 18,
                                   isTitle: true,
                                 ),
                                 TextWidget(
-                                  text: '${_quantityTextController.text}kg',
+                                  text: '/${_quantityTextController.text}kg',
                                   color: color,
-                                  textSize: 14,
+                                  textSize: 16,
                                   isTitle: false,
                                 ),
                               ],
