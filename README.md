@@ -1,6 +1,6 @@
 # grocery_app
 
-A new Flutter project.
+grocery shopping mobile application.
 
 ## Getting Started
 
