@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_app/inner_screens/cat_inner_screen.dart';
+import 'package:grocery_app/screens/category/category.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../provider/dark_theme_provider.dart';
+import '../../provider/dark_theme_provider.dart';
 
 class CategoriesWidget extends StatelessWidget {
  CategoriesWidget({super.key, required this.catText, required this.imgPath, });
@@ -16,7 +18,7 @@ class CategoriesWidget extends StatelessWidget {
     final Color color = themeState.getDarkTheme ? Colors.white70 : Colors.black;
     return InkWell(
       onTap: () {
-       // print('Category pressed');
+      Navigator.pushNamed(context, CategoryProductsScreen.routeName, arguments: catText);
       },
       child: Container(
         decoration: BoxDecoration(

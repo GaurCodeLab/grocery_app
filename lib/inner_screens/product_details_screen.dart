@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:grocery_app/models/products_model.dart';
+import 'package:grocery_app/provider/cart_provider.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
 import 'package:grocery_app/provider/products_provider.dart';
 import 'package:grocery_app/screens/cart/cart_widget.dart';
@@ -44,16 +46,24 @@ class _ProductDetailsState extends State<ProductDetails> {
     final Color color = Utils(context).color;
     final Color subtitleColor = Utils(context).subtitleColor;
     Size size = Utils(context).getScreenSize;
+
+    // final productModel = Provider.of<ProductModel>(context);
+    // final cartProvider = Provider.of<CartProvider>(context);
+
     final themeState = Provider.of<DarkThemeProvider>(context);
     final productProviders = Provider.of<ProductsProvider>(context);
     final productId = ModalRoute.of(context)!.settings.arguments as String;
+
+
 
     final getCurrentProduct = productProviders.findProductById(productId);
     double usedPrice = getCurrentProduct.isOnSale
         ? getCurrentProduct.salePrice
         : getCurrentProduct.price;
 
-    double totalPrice = usedPrice * double.parse(_quantityTextController.text);
+    double totalPrice = usedPrice * int.parse(_quantityTextController.text);
+
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -118,7 +128,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   isTitle: true,
                                 ),
                                 TextWidget(
-                                  text: '/kg',
+                                  text: getCurrentProduct.isPiece
+                                      ? '/piece'
+                                      : '/kg',
                                   color: color,
                                   textSize: 14,
                                   isTitle: false,
@@ -127,11 +139,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   width: 10,
                                 ),
                                 Visibility(
-                                  visible: true,
+                                  visible:
+                                      getCurrentProduct.isOnSale ? true : false,
                                   child: Text(
-                                    '\u{20B9}$usedPrice',
-                                    style:
-                                        TextStyle(fontSize: 16, color: color),
+                                    '\u{20B9}${getCurrentProduct.price}',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: color,
+                                        decoration: TextDecoration.lineThrough),
                                   ),
                                 ),
                               ],
@@ -140,7 +155,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                         Column(
                           children: [
-                           const AddToWishlistButton(),
+                            const AddToWishlistButton(),
                             const SizedBox(
                               height: 20,
                             ),
@@ -268,7 +283,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                           borderRadius: BorderRadius.circular(10),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(10),
-                            onTap: () {},
+                            onTap: () {
+                              // Add product to cart with product id and quantity from text controller as passing arguments
+                              // cartProvider.addProductsToCart(
+                              //     productId: productModel.id,
+                              //     quantity:
+                              //         int.parse(_quantityTextController.text));
+                              // print(' item: ${productModel.id}, quantity: $_quantityTextController.text');
+                            },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextWidget(

@@ -3,8 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:grocery_app/models/cart_model.dart';
+import 'package:grocery_app/models/products_model.dart';
+import 'package:grocery_app/provider/cart_provider.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
 import 'package:grocery_app/inner_screens/product_details_screen.dart';
+import 'package:grocery_app/provider/products_provider.dart';
 import 'package:grocery_app/services/global_methods.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/add_quantity_widget.dart';
@@ -39,6 +43,13 @@ class _CartWidgetState extends State<CartWidget> {
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
     final themeState = Provider.of<DarkThemeProvider>(context);
+    final productProvider = Provider.of<ProductsProvider>(context);
+    final cartModel = Provider.of<CartModel>(context);
+    final getCurrentProduct = productProvider.findProductById(cartModel.productId);
+    double usedPrice = getCurrentProduct.isOnSale
+    ? getCurrentProduct.salePrice
+    : getCurrentProduct.price;
+    final cartProvider = Provider.of<CartProvider>(context);
 
     Size size = Utils(context).getScreenSize;
 
@@ -65,14 +76,14 @@ class _CartWidgetState extends State<CartWidget> {
                     height: size.height * 0.18,
                     width: size.width * 0.22,
                     child: FancyShimmerImage(
-                      imageUrl: 'https://i.ibb.co/F0s3FHQ/Apricots.png',
+                      imageUrl: getCurrentProduct.imageUrl,
                       boxFit: BoxFit.fill,
                     ),
                   ),
                   Column(
                     children: [
                       TextWidget(
-                        text: 'Title',
+                        text: getCurrentProduct.title,
                         color: color,
                         textSize: 20,
                         isTitle: true,
@@ -95,6 +106,7 @@ class _CartWidgetState extends State<CartWidget> {
                                         1)
                                         .toString();
                                   });}
+                                 cartProvider.reduceQuantityByOne(cartModel.productId);
                                 },
                                 icon: CupertinoIcons.minus,
                                 color: Colors.red),
@@ -132,6 +144,7 @@ class _CartWidgetState extends State<CartWidget> {
                                             1)
                                         .toString();
                                   });
+                                  cartProvider.increaseQuantityByOne(cartModel.productId);
                                 },
                                 icon: CupertinoIcons.plus,
                                 color: Colors.green),
@@ -148,26 +161,33 @@ class _CartWidgetState extends State<CartWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            cartProvider.removeOneItem(cartModel.productId);
+                          //  print('${cartModel.productId}');
+                          },
                           child: const Icon(
                             CupertinoIcons.cart_badge_minus,
                             color: Colors.red,
-                            size: 20,
+                            size: 25,
                           ),
                         ),
                         const SizedBox(
-                          height: 5,
+                          height: 15,
+
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+
+                          },
                           child: const Icon(
                             CupertinoIcons.heart,
                             color: Colors.red,
-                            size: 20,
+                            size: 25,
                           ),
                         ),
+                        const SizedBox(height: 15,),
                         TextWidget(
-                            text: '\u{20B9}200', color: color, textSize: 18),
+                            text: '\u{20B9}${usedPrice.toStringAsFixed(2)}', color: color, textSize: 18),
                       ],
                     ),
                   )

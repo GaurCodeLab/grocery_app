@@ -4,6 +4,7 @@ import 'package:grocery_app/models/products_model.dart';
 import 'package:grocery_app/provider/products_provider.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/back_widget.dart';
+import 'package:grocery_app/widgets/empty_product_list_screen.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -33,24 +34,7 @@ class OnSaleScreen extends StatelessWidget {
         ),
       ),
       body: productsOnSale.isEmpty
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Image.asset('assets/images/box.png'),
-                    Text(
-                      'No products on sale yet! \nStay tuned',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: color,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ],
-                ),
-              ),
-            )
+          ? const EmptyProductWidget(text: 'No products on sale yet! \nStay tuned',)
           : GridView.count(
               crossAxisSpacing: 20,
               mainAxisSpacing: 20,
@@ -62,7 +46,7 @@ class OnSaleScreen extends StatelessWidget {
                 return ChangeNotifierProvider.value(
                     value: productsOnSale[index],
                     child: const OnSaleWidget(),);
-              }),
+              },),
             ),
     );
   }

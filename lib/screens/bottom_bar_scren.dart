@@ -7,7 +7,7 @@ import 'package:grocery_app/screens/home_screen.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:grocery_app/screens/cart/cart_screen.dart';
-import 'package:grocery_app/screens/category.dart';
+import 'package:grocery_app/screens/category/category.dart';
 import 'package:grocery_app/screens/user.dart';
 
 class BottomBarScreen extends StatefulWidget {
@@ -68,10 +68,14 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BottomNavigationBarItem(
             icon: badge.Badge(
-              toAnimate: true,
-              shape: BadgeShape.circle,
-              badgeColor: Colors.blue,
-              borderRadius: BorderRadius.circular(8),
+              badgeAnimation: const badge.BadgeAnimation.slide(
+                toAnimate: true,
+              ),
+              badgeStyle: badge.BadgeStyle(
+                shape: BadgeShape.circle,
+                badgeColor: Colors.blue,
+                borderRadius: BorderRadius.circular(8),
+              ),
               position: BadgePosition.topEnd(top: -7, end: -7),
               badgeContent: FittedBox(
                 child: TextWidget(text: '1', color: Colors.white, textSize: 15),

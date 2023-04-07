@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:grocery_app/provider/cart_provider.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
 import 'package:grocery_app/screens/cart/cart_widget.dart';
 import 'package:grocery_app/widgets/empty_screen.dart';
@@ -16,8 +17,11 @@ class CartScreen extends StatelessWidget {
     final Color color = Utils(context).color;
     final themeState = Provider.of<DarkThemeProvider>(context);
     Size size = Utils(context).getScreenSize;
-    bool _isEmpty = true;
-    return _isEmpty ? const  EmptyScreen(
+    final cartProvider = Provider.of<CartProvider>(context);
+    final cartItemsLists = cartProvider.getCartItems.values.toList().reversed.toList();
+    // bool _isEmpty = true;
+    return cartItemsLists.isEmpty
+        ? const  EmptyScreen(
       title: 'Your cart is empty!',
       subtitle: 'Add something in your cart',
         buttonText: 'Shop now',
@@ -26,7 +30,7 @@ class CartScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: themeState.getDarkTheme ? Colors.black : Colors.white,
         title: TextWidget(
-          text: 'My Cart (2)',
+          text: 'My Cart (${cartItemsLists.length})',
           color: color,
           textSize: 22,
           isTitle: true,
@@ -37,7 +41,9 @@ class CartScreen extends StatelessWidget {
               GlobalMethods.warningDialog(
                   title: 'Empty cart',
                   subtitle: 'Do you want to empty cart?',
-                  fct: () {},
+                  fct: () {
+                    cartProvider.clearCart();
+                  },
                   context: context);
             },
             icon: Icon(
@@ -52,11 +58,13 @@ class CartScreen extends StatelessWidget {
           _checkOut(context: context),
           Expanded(
             child: ListView.builder(
-              itemCount: 10,
+              itemCount: cartItemsLists.length,
               itemBuilder: (context, index) {
-                return const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: CartWidget(),
+                return  Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: ChangeNotifierProvider.value(
+                      value: cartItemsLists[index],
+                      child: CartWidget())
                 );
               },
             ),

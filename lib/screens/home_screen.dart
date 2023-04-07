@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_constructors
-
+import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/consts/constss.dart';
@@ -10,6 +10,7 @@ import 'package:grocery_app/widgets/feed_items.dart';
 import 'package:grocery_app/widgets/on_sale.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
+// import 'package:flutter_neumorphic/flutter_neumorphic.dart/';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 import '../inner_screens/feedsScreen.dart';
@@ -149,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: 8.0,vertical: 8.0),
               child: GridView.count(
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20,

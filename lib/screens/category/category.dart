@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
 import 'package:grocery_app/services/utils.dart';
-import 'package:grocery_app/widgets/categories_widget.dart';
+import 'package:grocery_app/screens/category/categories_widget.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 

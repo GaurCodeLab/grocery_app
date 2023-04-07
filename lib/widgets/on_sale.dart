@@ -2,8 +2,10 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/models/products_model.dart';
+import 'package:grocery_app/provider/cart_provider.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
 import 'package:grocery_app/services/utils.dart';
+import 'package:grocery_app/widgets/add_to_cart_dynamic_button.dart';
 import 'package:grocery_app/widgets/add_to_wishlist_btn.dart';
 import 'package:grocery_app/widgets/price_widget.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
@@ -43,6 +45,8 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
     final Color color = Utils(context).color;
     bool isfavourite = false;
     final productModel = Provider.of<ProductModel>(context);
+
+    final cartProvider = Provider.of<CartProvider>(context);
 
     Size size = Utils(context).getScreenSize;
     return Material(
@@ -85,56 +89,80 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        FancyShimmerImage(
-                          imageUrl: productModel.imageUrl,
-                          height: size.height * 0.12,
-                          width: size.width * 0.25,
-                          boxFit: BoxFit.fill,
-                        ),
-                        // Image.network(
-                        //   'https://i.ibb.co/F0s3FHQ/Apricots.png',
-                        //   height: size.height * 0.12,
-                        //   fit: BoxFit.fill,
-                        // ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              width: 70.0,
-                            ),
-                            const AddToWishlistButton(),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                            GestureDetector(
-                              onTap: () {},
-                              child: Icon(
-                                IconlyLight.bag2,
-                                size: 22,
-                                color: color,
+                    Flexible(
+                      flex: 3,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          FancyShimmerImage(
+                            imageUrl: productModel.imageUrl,
+                            height: size.height * 0.12,
+                            width: size.width * 0.25,
+                            boxFit: BoxFit.fill,
+                          ),
+                          // Image.network(
+                          //   'https://i.ibb.co/F0s3FHQ/Apricots.png',
+                          //   height: size.height * 0.12,
+                          //   fit: BoxFit.fill,
+                          // ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                width: 70.0,
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: TextWidget(
-                        text: productModel.title,
-                        color: Titlecolor,
-                        textSize: 18,
-                        isTitle: true,
+                              const AddToWishlistButton(),
+                              const SizedBox(
+                                height: 20.0,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  cartProvider.addProductsToCart(productId: productModel.id, quantity: 1);
+                                  print("item: ${productModel.id}  ");
+                                },
+                                child: Icon(
+                                  IconlyLight.bag2,
+                                  size: 22,
+                                  color: color,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    PriceWidget(
-                      price: productModel.price,
-                      salePrice: productModel.salePrice,
-                      isOnSale: true,
+                    Flexible(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: TextWidget(
+                          text: productModel.title,
+                          color: Titlecolor,
+                          textSize: 18,
+                          isTitle: true,
+                        ),
+                      ),
                     ),
+                    Flexible(
+                      child: Row(
+                        children: [
+                          PriceWidget(
+                            price: productModel.price,
+                            salePrice: productModel.salePrice,
+                            isOnSale: true,
+                          ),
+                          TextWidget(
+                            text: productModel.isPiece ? '/piece' : '/kg',
+                            color: Colors.green,
+                            textSize: 16,
+                            isTitle: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    // const SizedBox(height: 15,),
+                    // Flexible(
+                    //     child: AddToCartButton(productId: productModel.id, quantityProduct: 1),),
                   ],
                 ),
               ],

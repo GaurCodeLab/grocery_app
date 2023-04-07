@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart%20';
+
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:grocery_app/consts/constss.dart';
 import 'package:grocery_app/models/products_model.dart';
 import 'package:grocery_app/provider/products_provider.dart';
 import 'package:grocery_app/widgets/back_widget.dart';
+import 'package:grocery_app/widgets/empty_product_list_screen.dart';
 import 'package:grocery_app/widgets/feed_items.dart';
 import 'package:provider/provider.dart';
 
@@ -12,16 +12,16 @@ import '../provider/dark_theme_provider.dart';
 import '../services/utils.dart';
 import '../widgets/text_widget.dart';
 
-class FeedsScreen extends StatefulWidget {
-  static const routeName = '/FeedsScreen';
+class CategoryProductsScreen extends StatefulWidget {
+  static const routeName = '/CategoryProductsScreen';
 
-  const FeedsScreen({Key? key}) : super(key: key);
+  const CategoryProductsScreen({Key? key}) : super(key: key);
 
   @override
-  State<FeedsScreen> createState() => _FeedsScreenState();
+  State<CategoryProductsScreen> createState() => _CategoryProductsScreenState();
 }
 
-class _FeedsScreenState extends State<FeedsScreen> {
+class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
   final TextEditingController _searchTextController = TextEditingController();
   final FocusNode _searchTextFocusNode = FocusNode();
 
@@ -38,7 +38,9 @@ class _FeedsScreenState extends State<FeedsScreen> {
     final themeState = Provider.of<DarkThemeProvider>(context);
     Size size = Utils(context).getScreenSize;
     final productProviders = Provider.of<ProductsProvider>(context);
-    List<ProductModel> allProducts = productProviders.getProducts;
+    final catName = ModalRoute.of(context)!.settings.arguments as String;
+    List<ProductModel> productByCat = productProviders.findByCategory(catName);
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -69,7 +71,9 @@ class _FeedsScreenState extends State<FeedsScreen> {
                   width: 5,
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+
+                  },
                   icon: Icon(
                     IconlyLight.heart,
                     color: color,
@@ -80,7 +84,9 @@ class _FeedsScreenState extends State<FeedsScreen> {
           )
         ],
       ),
-      body: SingleChildScrollView(
+      body: productByCat.isEmpty ?
+      const EmptyProductWidget( text: 'We will be adding stocks soon! \nStay tuned',) :
+      SingleChildScrollView(
         child: Column(
           children: [
             Padding(
@@ -98,7 +104,7 @@ class _FeedsScreenState extends State<FeedsScreen> {
                   child: TextField(
                     focusNode: _searchTextFocusNode,
                     controller: _searchTextController,
-                    onChanged: (value) {
+                    onChanged: (valuee) {
                       setState(() {});
                     },
                     decoration: InputDecoration(
@@ -139,9 +145,9 @@ class _FeedsScreenState extends State<FeedsScreen> {
               crossAxisCount: 2,
               physics: const NeverScrollableScrollPhysics(),
               childAspectRatio: size.width / (size.height * 0.70),
-              children: List.generate(allProducts.length, (index) {
+              children: List.generate(productByCat.length, (index) {
                 return ChangeNotifierProvider.value(
-                  value: allProducts[index],
+                  value: productByCat[index],
                   child: FeedWidget(),
                 );
               }),

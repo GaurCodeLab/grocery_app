@@ -2,7 +2,9 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart ';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/models/products_model.dart';
+import 'package:grocery_app/provider/cart_provider.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
+import 'package:grocery_app/provider/products_provider.dart';
 import 'package:grocery_app/services/global_methods.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/add_to_cart_dynamic_button.dart';
@@ -14,8 +16,7 @@ import 'package:provider/provider.dart';
 import '../inner_screens/product_details_screen.dart';
 
 class FeedWidget extends StatefulWidget {
-   FeedWidget({ Key? key}) : super(key: key);
-
+  FeedWidget({Key? key}) : super(key: key);
 
   @override
   State<FeedWidget> createState() => _FeedWidgetState();
@@ -23,19 +24,23 @@ class FeedWidget extends StatefulWidget {
 
 class _FeedWidgetState extends State<FeedWidget> {
   final _quantityTextController = TextEditingController();
+   String? quantityProduct;
+
+  String itemQuantity = '1';
 
   @override
   void initState() {
-    _quantityTextController.text = '1';
+   quantityProduct = '1';
+
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _quantityTextController.dispose();
-    super.dispose();
-  }
-
+  // @override
+  // void dispose() {
+  //   //_quantityTextController.dispose();
+  //
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +48,8 @@ class _FeedWidgetState extends State<FeedWidget> {
     final Color subtitleColor = Utils(context).subtitleColor;
     final themeState = Provider.of<DarkThemeProvider>(context);
     final productModel = Provider.of<ProductModel>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
+
     Size size = Utils(context).getScreenSize;
     final Color color = Utils(context).color;
     return Material(
@@ -73,7 +80,8 @@ class _FeedWidgetState extends State<FeedWidget> {
           onTap: () {
             // GlobalMethods.navigateTo(
             //     ctx: context, routeName: ProductDetails.routeName);
-            Navigator.pushNamed(context, ProductDetails.routeName, arguments: productModel.id);
+            Navigator.pushNamed(context, ProductDetails.routeName,
+                arguments: productModel.id);
           },
           borderRadius: BorderRadius.circular(30),
           child: Padding(
@@ -106,8 +114,7 @@ class _FeedWidgetState extends State<FeedWidget> {
                               child: Padding(
                                 padding: EdgeInsets.only(
                                     left: 5.0, right: 10, bottom: 80),
-                                 child : AddToWishlistButton(),
-
+                                child: AddToWishlistButton(),
                               ),
                             ),
                           ],
@@ -122,13 +129,25 @@ class _FeedWidgetState extends State<FeedWidget> {
                           isTitle: true,
                         ),
                       ),
-                      PriceWidget(
-                        salePrice: productModel.salePrice,
-                        price: productModel.price,
-                        isOnSale: true,
-
-
+                      Row(
+                        children: [
+                          PriceWidget(
+                            salePrice: productModel.salePrice,
+                            price: productModel.price,
+                            isOnSale: productModel.isOnSale ? true : false,
+                          ),
+                          TextWidget(
+                            text: productModel.isPiece ? '/piece' : '/kg',
+                            color: Colors.green,
+                            textSize: 16,
+                            isTitle: true,
+                          ),
+                        ],
                       ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+
                       // Row(
                       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       //   children: const [
@@ -150,10 +169,27 @@ class _FeedWidgetState extends State<FeedWidget> {
                       //     // ),
                       //   ],
                       // ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 40.0, top: 10, bottom: 5),
-                        child: AddToCartButton(),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          Flexible(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 4.0, right: 4.0, top: 17.0),
+                              child: TextWidget(
+                                  text: 'Qty:', color: color, textSize: 14),
+                            ),
+                          ),
+                          Flexible(flex: 2, child: categoryDropDown(),),
+                        ],
                       ),
+                      const SizedBox(height: 5,),
+                       Padding(
+                        padding: const EdgeInsets.only(bottom: 10, left: 15 ),
+                        child: AddToCartButton(quantity: quantityProduct!) ),
+
                     ],
                   ),
                 ),
@@ -161,6 +197,50 @@ class _FeedWidgetState extends State<FeedWidget> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget categoryDropDown() {
+    return DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        value: itemQuantity,
+        onChanged: (value) {
+          setState(() {
+            itemQuantity = value!;
+            quantityProduct = itemQuantity;
+          });
+          print(itemQuantity);
+        },
+        hint: const Text('Qty: '),
+        items: const [
+          DropdownMenuItem(
+            value: '1',
+            child: Text(
+              '1',
+            ),
+          ),
+          DropdownMenuItem(
+            value: '2',
+            child: Text(
+              '2',
+            ),
+          ),
+          DropdownMenuItem(
+            value: '3',
+            child: Text(
+              '3',
+            ),
+          ),
+          DropdownMenuItem(
+            value: '4',
+            child: Text('4'),
+          ),
+          DropdownMenuItem(
+            value: '5',
+            child: Text('5'),
+          ),
+        ],
       ),
     );
   }

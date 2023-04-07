@@ -13,5 +13,6 @@ class ProductModel with ChangeNotifier{
       required this.price,
       required this.salePrice,
       required this.isOnSale,
-      required this.isPiece});
+      required this.isPiece}
+      );
 }
