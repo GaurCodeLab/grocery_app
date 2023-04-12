@@ -2,6 +2,7 @@ import 'package:badges/badges.dart' as badge;
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:grocery_app/provider/cart_provider.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
 import 'package:grocery_app/screens/home_screen.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
@@ -37,6 +38,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   Widget build(BuildContext context) {
     final themeState = Provider.of<DarkThemeProvider>(context);
     bool isDark = themeState.getDarkTheme;
+    final cartProvider = Provider.of<CartProvider>(context);
+    final cartItemsLists = cartProvider.getCartItems.values.toList().reversed.toList();
     return Scaffold(
       // appBar: AppBar(
       //   title: Text(_pages[_selectedIndex]['title']),
@@ -78,7 +81,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               ),
               position: BadgePosition.topEnd(top: -7, end: -7),
               badgeContent: FittedBox(
-                child: TextWidget(text: '1', color: Colors.white, textSize: 15),
+                child: TextWidget(text: cartItemsLists.length.toString(), color: Colors.white, textSize: 15),
               ),
               child:
                   Icon(_selectedIndex == 2 ? IconlyBold.buy : IconlyLight.buy),

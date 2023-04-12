@@ -1,11 +1,8 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart ';
-import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/models/products_model.dart';
-import 'package:grocery_app/provider/cart_provider.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
-import 'package:grocery_app/provider/products_provider.dart';
-import 'package:grocery_app/services/global_methods.dart';
+import 'package:grocery_app/provider/wishlist_provider.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/add_to_cart_dynamic_button.dart';
 import 'package:grocery_app/widgets/add_to_wishlist_btn.dart';
@@ -23,14 +20,13 @@ class FeedWidget extends StatefulWidget {
 }
 
 class _FeedWidgetState extends State<FeedWidget> {
-  final _quantityTextController = TextEditingController();
-   String? quantityProduct;
+  String? quantityProduct;
 
   String itemQuantity = '1';
 
   @override
   void initState() {
-   quantityProduct = '1';
+    quantityProduct = '1';
 
     super.initState();
   }
@@ -45,11 +41,11 @@ class _FeedWidgetState extends State<FeedWidget> {
   @override
   Widget build(BuildContext context) {
     final Color titlecolor = Utils(context).titleColor;
-    final Color subtitleColor = Utils(context).subtitleColor;
     final themeState = Provider.of<DarkThemeProvider>(context);
     final productModel = Provider.of<ProductModel>(context);
-    final cartProvider = Provider.of<CartProvider>(context);
-
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+    bool? isInWishlist =
+        wishlistProvider.getWishlistItems.containsKey(productModel.id);
     Size size = Utils(context).getScreenSize;
     final Color color = Utils(context).color;
     return Material(
@@ -76,125 +72,129 @@ class _FeedWidgetState extends State<FeedWidget> {
             ),
           ],
         ),
-        child: InkWell(
-          onTap: () {
-            // GlobalMethods.navigateTo(
-            //     ctx: context, routeName: ProductDetails.routeName);
-            Navigator.pushNamed(context, ProductDetails.routeName,
-                arguments: productModel.id);
-          },
-          borderRadius: BorderRadius.circular(30),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        flex: 2,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FancyShimmerImage(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              // GlobalMethods.navigateTo(
+                              //     ctx: context, routeName: ProductDetails.routeName);
+                              Navigator.pushNamed(context, ProductDetails.routeName,
+                                  arguments: productModel.id);
+                            },
+                            child: FancyShimmerImage(
                               imageUrl: productModel.imageUrl,
                               height: size.height * 0.15,
                               width: size.width * 0.3,
                               boxFit: BoxFit.fill,
                             ),
-
-                            // const SizedBox(
-                            //   width: 35.0,
-                            // ),
-                            const Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    left: 5.0, right: 10, bottom: 80),
-                                child: AddToWishlistButton(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: TextWidget(
-                          text: productModel.title,
-                          color: titlecolor,
-                          textSize: 18,
-                          isTitle: true,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          PriceWidget(
-                            salePrice: productModel.salePrice,
-                            price: productModel.price,
-                            isOnSale: productModel.isOnSale ? true : false,
                           ),
-                          TextWidget(
-                            text: productModel.isPiece ? '/piece' : '/kg',
-                            color: Colors.green,
-                            textSize: 16,
-                            isTitle: true,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
 
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: const [
-                      //     PriceWidget(
-                      //       price: 300,
-                      //       salePrice: 280,
-                      //       isOnSale: false,
-                      //       textPrice: 1,
-                      //     ),
-                      //     // const SizedBox(width: 20,),
-                      //
-                      //     // GestureDetector(
-                      //     //   onTap: () {},
-                      //     //   child: Icon(
-                      //     //     IconlyLight.plus,
-                      //     //     size: 22,
-                      //     //     color: color,
-                      //     //   ),
-                      //     // ),
-                      //   ],
-                      // ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-
+                          // const SizedBox(
+                          //   width: 35.0,
+                          // ),
                           Flexible(
                             flex: 1,
                             child: Padding(
                               padding: const EdgeInsets.only(
-                                  left: 4.0, right: 4.0, top: 17.0),
-                              child: TextWidget(
-                                  text: 'Qty:', color: color, textSize: 14),
+                                  left: 5.0, right: 10, bottom: 80),
+                              child: AddToWishlistButton(
+                                  productId: productModel.id,
+                                  isInWishlist: isInWishlist),
                             ),
                           ),
-                          Flexible(flex: 2, child: categoryDropDown(),),
                         ],
                       ),
-                      const SizedBox(height: 5,),
-                       Padding(
-                        padding: const EdgeInsets.only(bottom: 10, left: 15 ),
-                        child: AddToCartButton(quantity: quantityProduct!) ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: TextWidget(
+                        text: productModel.title,
+                        color: titlecolor,
+                        textSize: 18,
+                        isTitle: true,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        PriceWidget(
+                          salePrice: productModel.salePrice,
+                          price: productModel.price,
+                          isOnSale: productModel.isOnSale ? true : false,
+                        ),
+                        TextWidget(
+                          text: productModel.isPiece ? '/piece' : '/kg',
+                          color: Colors.green,
+                          textSize: 16,
+                          isTitle: true,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
 
-                    ],
-                  ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: const [
+                    //     PriceWidget(
+                    //       price: 300,
+                    //       salePrice: 280,
+                    //       isOnSale: false,
+                    //       textPrice: 1,
+                    //     ),
+                    //     // const SizedBox(width: 20,),
+                    //
+                    //     // GestureDetector(
+                    //     //   onTap: () {},
+                    //     //   child: Icon(
+                    //     //     IconlyLight.plus,
+                    //     //     size: 22,
+                    //     //     color: color,
+                    //     //   ),
+                    //     // ),
+                    //   ],
+                    // ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 4.0, right: 4.0, top: 17.0),
+                            child: TextWidget(
+                                text: 'Qty:', color: color, textSize: 14),
+                          ),
+                        ),
+                        Flexible(
+                          flex: 2,
+                          child: categoryDropDown(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(bottom: 10, left: 15),
+                        child: AddToCartButton(quantity: quantityProduct!)),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

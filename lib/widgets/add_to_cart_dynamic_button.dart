@@ -1,7 +1,6 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:grocery_app/models/products_model.dart';
 import 'package:grocery_app/services/utils.dart';
-import 'package:grocery_app/widgets/price_widget.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -24,13 +23,18 @@ class _AddToCartButtonState extends State<AddToCartButton> {
     final themeState = Provider.of<DarkThemeProvider>(context);
     final productModel = Provider.of<ProductModel>(context);
     final cartProvider = Provider.of<CartProvider>(context);
+    bool? isInCart = cartProvider.getCartItems.containsKey(productModel.id);
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, left: 10),
       child: NeumorphicButton(
-        onPressed: () {
+        onPressed: isInCart ? null
+          :() {
+          // if(_isInCart) {
+          //   return;
+          // }
 
           cartProvider.addProductsToCart(productId: productModel.id, quantity: int.parse(widget.quantity) );
-        print("item and its quantity are : item : ${productModel.id}, quantity: ${widget.quantity}");
+        //print("item and its quantity are : item : ${productModel.id}, quantity: ${widget.quantity}");
 
         },
         style: NeumorphicStyle(
@@ -45,7 +49,7 @@ class _AddToCartButtonState extends State<AddToCartButton> {
             shape: NeumorphicShape.convex,
             intensity: 5),
         child: TextWidget(
-          text: 'Add to cart',
+          text: isInCart ? 'In cart' :'Add to cart',
           color: color,
           textSize: 18,
         ),

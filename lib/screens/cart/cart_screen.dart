@@ -16,7 +16,6 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
     final themeState = Provider.of<DarkThemeProvider>(context);
-    Size size = Utils(context).getScreenSize;
     final cartProvider = Provider.of<CartProvider>(context);
     final cartItemsLists = cartProvider.getCartItems.values.toList().reversed.toList();
     // bool _isEmpty = true;
@@ -64,7 +63,7 @@ class CartScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(15.0),
                   child: ChangeNotifierProvider.value(
                       value: cartItemsLists[index],
-                      child: CartWidget())
+                      child: CartWidget(quantityState: cartItemsLists[index].quantity, ),),
                 );
               },
             ),

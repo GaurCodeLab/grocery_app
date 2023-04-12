@@ -4,8 +4,8 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/models/products_model.dart';
 import 'package:grocery_app/provider/cart_provider.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
+import 'package:grocery_app/provider/wishlist_provider.dart';
 import 'package:grocery_app/services/utils.dart';
-import 'package:grocery_app/widgets/add_to_cart_dynamic_button.dart';
 import 'package:grocery_app/widgets/add_to_wishlist_btn.dart';
 import 'package:grocery_app/widgets/price_widget.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
@@ -13,7 +13,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 import '../inner_screens/product_details_screen.dart';
-import '../services/global_methods.dart';
 
 class OnSaleWidget extends StatefulWidget {
   const OnSaleWidget({super.key});
@@ -40,13 +39,14 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
   @override
   Widget build(BuildContext context) {
     final Color Titlecolor = Utils(context).titleColor;
-    final Color SubtitleColor = Utils(context).subtitleColor;
     final themeState = Provider.of<DarkThemeProvider>(context);
     final Color color = Utils(context).color;
-    bool isfavourite = false;
     final productModel = Provider.of<ProductModel>(context);
 
     final cartProvider = Provider.of<CartProvider>(context);
+    bool? _isInCart = cartProvider.getCartItems.containsKey(productModel.id);
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+    bool? isInWishlist = wishlistProvider.getWishlistItems.containsKey(productModel.id);
 
     Size size = Utils(context).getScreenSize;
     return Material(
@@ -79,7 +79,8 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
             // GlobalMethods.navigateTo(
             //     ctx: context, routeName: ProductDetails.routeName);
 
-            Navigator.pushNamed(context, ProductDetails.routeName, arguments: productModel.id);
+            Navigator.pushNamed(context, ProductDetails.routeName,
+                arguments: productModel.id);
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0, top: 8.0),
@@ -111,20 +112,32 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                               const SizedBox(
                                 width: 70.0,
                               ),
-                              const AddToWishlistButton(),
+                              AddToWishlistButton(
+                                productId: productModel.id, isInWishlist: isInWishlist,
+                              ),
                               const SizedBox(
                                 height: 20.0,
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  cartProvider.addProductsToCart(productId: productModel.id, quantity: 1);
-                                  print("item: ${productModel.id}  ");
-                                },
-                                child: Icon(
-                                  IconlyLight.bag2,
-                                  size: 22,
-                                  color: color,
-                                ),
+                                onTap: _isInCart
+                                    ? null
+                                    : () {
+                                        cartProvider.addProductsToCart(
+                                            productId: productModel.id,
+                                            quantity: 1);
+                                        //print("item: ${productModel.id}  ");
+                                      },
+                                child: _isInCart
+                                    ? const Icon(
+                                        IconlyBold.bag2,
+                                        size: 22,
+                                        color: Colors.green,
+                                      )
+                                    : Icon(
+                                        IconlyLight.bag2,
+                                        size: 22,
+                                        color: color,
+                                      ),
                               ),
                             ],
                           ),

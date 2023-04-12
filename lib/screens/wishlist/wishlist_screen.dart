@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:grocery_app/provider/wishlist_provider.dart';
 import 'package:grocery_app/screens/wishlist/wishlist_widget.dart';
 import 'package:grocery_app/services/global_methods.dart';
 import 'package:grocery_app/widgets/back_widget.dart';
@@ -18,11 +19,13 @@ class WishlistScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool _isEmpty = true;
+    // bool _isEmpty = true;
     final Color color = Utils(context).color;
     final themeState = Provider.of<DarkThemeProvider>(context);
-    Size size = Utils(context).getScreenSize;
-    return _isEmpty
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+    final wishlistItemsLists =
+        wishlistProvider.getWishlistItems.values.toList().reversed.toList();
+    return wishlistItemsLists.isEmpty
         ? const EmptyScreen(
             title: 'Your Wishlist is empty!',
             subtitle: 'Add something to wishlist :)',
@@ -34,12 +37,13 @@ class WishlistScreen extends StatelessWidget {
               backgroundColor:
                   themeState.getDarkTheme ? Colors.black : Colors.white,
               centerTitle: true,
+              leading: const BackWidget(),
               automaticallyImplyLeading: false,
               title: TextWidget(
-                text: 'Wishlist (2)',
+                text: 'My Wishlist(${wishlistItemsLists.length})',
                 color: color,
                 textSize: 22,
-                isTitle: true,
+                isTitle: false,
               ),
               actions: [
                 IconButton(
@@ -47,7 +51,9 @@ class WishlistScreen extends StatelessWidget {
                     GlobalMethods.warningDialog(
                         title: 'Clear wishlist',
                         subtitle: 'Do you want to clear wishlist?',
-                        fct: () {},
+                        fct: () {
+                          wishlistProvider.clearWishlist();
+                        },
                         context: context);
                   },
                   icon: Icon(
@@ -56,15 +62,20 @@ class WishlistScreen extends StatelessWidget {
                   ),
                 ),
               ],
-              leading: const BackWidget(),
             ),
-            body: MasonryGridView.count(
-                crossAxisCount: 2,
-                mainAxisSpacing: 4,
-                crossAxisSpacing: 4,
-                itemBuilder: (context, index) {
-                  return const WishlistWidget();
-                }),
+            body: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MasonryGridView.count(
+                itemCount: wishlistItemsLists.length,
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 4,
+                  itemBuilder: (context, index) {
+                    return ChangeNotifierProvider.value(
+                        value: wishlistItemsLists[index],
+                        child: const WishlistWidget());
+                  }),
+            ),
           );
   }
 }

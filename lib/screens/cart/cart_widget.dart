@@ -4,21 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:grocery_app/models/cart_model.dart';
-import 'package:grocery_app/models/products_model.dart';
 import 'package:grocery_app/provider/cart_provider.dart';
-import 'package:grocery_app/provider/dark_theme_provider.dart';
 import 'package:grocery_app/inner_screens/product_details_screen.dart';
 import 'package:grocery_app/provider/products_provider.dart';
-import 'package:grocery_app/services/global_methods.dart';
+import 'package:grocery_app/provider/wishlist_provider.dart';
 import 'package:grocery_app/services/utils.dart';
-import 'package:grocery_app/widgets/add_quantity_widget.dart';
-import 'package:grocery_app/widgets/add_to_cart_dynamic_button.dart';
+import 'package:grocery_app/widgets/add_to_wishlist_btn.dart';
 import 'package:grocery_app/widgets/quantity_controller_widget.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
 class CartWidget extends StatefulWidget {
-  const CartWidget({Key? key}) : super(key: key);
+  const CartWidget({Key? key, required this.quantityState}) : super(key: key);
+  final int quantityState;
 
   @override
   State<CartWidget> createState() => _CartWidgetState();
@@ -29,7 +27,7 @@ class _CartWidgetState extends State<CartWidget> {
 
   @override
   void initState() {
-    _quantityTextController.text = '1';
+    _quantityTextController.text = widget.quantityState.toString();
     super.initState();
   }
 
@@ -42,21 +40,27 @@ class _CartWidgetState extends State<CartWidget> {
   @override
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
-    final themeState = Provider.of<DarkThemeProvider>(context);
+   // final themeState = Provider.of<DarkThemeProvider>(context);
     final productProvider = Provider.of<ProductsProvider>(context);
     final cartModel = Provider.of<CartModel>(context);
-    final getCurrentProduct = productProvider.findProductById(cartModel.productId);
+    final getCurrentProduct =
+        productProvider.findProductById(cartModel.productId);
     double usedPrice = getCurrentProduct.isOnSale
-    ? getCurrentProduct.salePrice
-    : getCurrentProduct.price;
+        ? getCurrentProduct.salePrice
+        : getCurrentProduct.price;
     final cartProvider = Provider.of<CartProvider>(context);
+   // final cartItemsLists =cartProvider.getCartItems.values.toList().reversed.toList();
+    //final productModel = Provider.of<ProductModel>(context);
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+    bool? isInWishlist =
+        wishlistProvider.getWishlistItems.containsKey(getCurrentProduct.id);
 
     Size size = Utils(context).getScreenSize;
 
     return InkWell(
       onTap: () {
-        GlobalMethods.navigateTo(
-            ctx: context, routeName: ProductDetails.routeName);
+        Navigator.pushNamed(context, ProductDetails.routeName,
+            arguments: cartModel.productId);
       },
       child: Row(
         children: [
@@ -97,16 +101,19 @@ class _CartWidgetState extends State<CartWidget> {
                           children: [
                             QuantityController(
                                 fct: () {
-                                  if (_quantityTextController.text == '1'){
+                                  if (_quantityTextController.text == '1') {
                                     return;
                                   } else {
-                                  setState(() {
-                                    _quantityTextController.text = (int.parse(
-                                        _quantityTextController.text) -
-                                        1)
-                                        .toString();
-                                  });}
-                                 cartProvider.reduceQuantityByOne(cartModel.productId);
+                                    setState(() {
+                                      cartProvider.reduceQuantityByOne(
+                                          cartModel.productId);
+                                      _quantityTextController.text = (int.parse(
+                                                  _quantityTextController
+                                                      .text) -
+                                              1)
+                                          .toString();
+                                    });
+                                  }
                                 },
                                 icon: CupertinoIcons.minus,
                                 color: Colors.red),
@@ -139,12 +146,13 @@ class _CartWidgetState extends State<CartWidget> {
                             QuantityController(
                                 fct: () {
                                   setState(() {
+                                    cartProvider.increaseQuantityByOne(
+                                        cartModel.productId);
                                     _quantityTextController.text = (int.parse(
                                                 _quantityTextController.text) +
                                             1)
                                         .toString();
                                   });
-                                  cartProvider.increaseQuantityByOne(cartModel.productId);
                                 },
                                 icon: CupertinoIcons.plus,
                                 color: Colors.green),
@@ -163,7 +171,7 @@ class _CartWidgetState extends State<CartWidget> {
                         InkWell(
                           onTap: () {
                             cartProvider.removeOneItem(cartModel.productId);
-                          //  print('${cartModel.productId}');
+                            //  print('${cartModel.productId}');
                           },
                           child: const Icon(
                             CupertinoIcons.cart_badge_minus,
@@ -173,21 +181,19 @@ class _CartWidgetState extends State<CartWidget> {
                         ),
                         const SizedBox(
                           height: 15,
-
                         ),
                         InkWell(
-                          onTap: () {
-
-                          },
-                          child: const Icon(
-                            CupertinoIcons.heart,
-                            color: Colors.red,
-                            size: 25,
-                          ),
+                            onTap: () {},
+                            child: AddToWishlistButton(
+                                productId: getCurrentProduct.id,
+                                isInWishlist: isInWishlist)),
+                        const SizedBox(
+                          height: 15,
                         ),
-                        const SizedBox(height: 15,),
                         TextWidget(
-                            text: '\u{20B9}${usedPrice.toStringAsFixed(2)}', color: color, textSize: 18),
+                            text: '\u{20B9}${usedPrice.toStringAsFixed(2)}',
+                            color: color,
+                            textSize: 18),
                       ],
                     ),
                   )
@@ -200,31 +206,4 @@ class _CartWidgetState extends State<CartWidget> {
     );
   }
 
-  Widget _quantityController(
-      {required Function fct, required IconData icon, required Color color}) {
-    return Flexible(
-      flex: 2,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: Material(
-          color: color,
-          borderRadius: BorderRadius.circular(12),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(12),
-            onTap: () {
-              fct();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Icon(
-                icon,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

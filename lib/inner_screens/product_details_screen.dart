@@ -2,15 +2,11 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:grocery_app/models/products_model.dart';
 import 'package:grocery_app/provider/cart_provider.dart';
-import 'package:grocery_app/provider/dark_theme_provider.dart';
 import 'package:grocery_app/provider/products_provider.dart';
-import 'package:grocery_app/screens/cart/cart_widget.dart';
+import 'package:grocery_app/provider/wishlist_provider.dart';
 import 'package:grocery_app/services/utils.dart';
-import 'package:grocery_app/widgets/add_quantity_widget.dart';
 import 'package:grocery_app/widgets/add_to_wishlist_btn.dart';
 import 'package:grocery_app/widgets/back_widget.dart';
 import 'package:grocery_app/widgets/quantity_controller_widget.dart';
@@ -44,17 +40,12 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
-    final Color subtitleColor = Utils(context).subtitleColor;
     Size size = Utils(context).getScreenSize;
 
-    // final productModel = Provider.of<ProductModel>(context);
-    // final cartProvider = Provider.of<CartProvider>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
 
-    final themeState = Provider.of<DarkThemeProvider>(context);
     final productProviders = Provider.of<ProductsProvider>(context);
     final productId = ModalRoute.of(context)!.settings.arguments as String;
-
-
 
     final getCurrentProduct = productProviders.findProductById(productId);
     double usedPrice = getCurrentProduct.isOnSale
@@ -62,7 +53,12 @@ class _ProductDetailsState extends State<ProductDetails> {
         : getCurrentProduct.price;
 
     double totalPrice = usedPrice * int.parse(_quantityTextController.text);
-
+    bool? isInCart =
+        cartProvider.getCartItems.containsKey(getCurrentProduct.id);
+    //final productModel = Provider.of<ProductModel>(context);
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+    bool? isInWishlist =
+        wishlistProvider.getWishlistItems.containsKey(getCurrentProduct.id);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -155,7 +151,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                         Column(
                           children: [
-                            const AddToWishlistButton(),
+                            AddToWishlistButton(
+                              productId: getCurrentProduct.id,
+                              isInWishlist: isInWishlist,
+                            ),
                             const SizedBox(
                               height: 20,
                             ),
@@ -263,7 +262,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                             Row(
                               children: [
                                 TextWidget(
-                                  text: '\u{20B9}$totalPrice',
+                                  text:
+                                      '\u{20B9}${totalPrice.toStringAsFixed(2)}',
                                   color: color,
                                   textSize: 18,
                                   isTitle: true,
@@ -283,18 +283,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                           borderRadius: BorderRadius.circular(10),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(10),
-                            onTap: () {
-                              // Add product to cart with product id and quantity from text controller as passing arguments
-                              // cartProvider.addProductsToCart(
-                              //     productId: productModel.id,
-                              //     quantity:
-                              //         int.parse(_quantityTextController.text));
-                              // print(' item: ${productModel.id}, quantity: $_quantityTextController.text');
-                            },
+                            onTap: isInCart
+                                ? null
+                                : () {
+                                    // Add product to cart with product id and quantity from text controller as passing arguments
+                                    cartProvider.addProductsToCart(
+                                      productId: getCurrentProduct.id,
+                                      quantity: int.parse(
+                                          _quantityTextController.text),
+                                    );
+                                    // print(' item: ${productModel.id}, quantity: $_quantityTextController.text');
+                                  },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextWidget(
-                                text: 'Add to cart',
+                                text: isInCart ? 'In cart' : 'Add to cart',
                                 textSize: 20,
                                 color: Colors.white,
                               ),
