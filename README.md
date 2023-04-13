@@ -4,13 +4,17 @@ grocery shopping mobile application.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is  complete grocery shopping mobile application designed and 
+developed to teach myself some advance topics of flutter framework and Firebase backend services.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+There is an admin panel for this mobile application to handle all the products pricing and
+details( image, sale and other details), it is a web application built using flutter web.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Admin panel (flutter web app) repository : 
+
+[Flutter web app Admin panel for grocery mobile app](https://github.com/GaurCodeLab/grocery_admin_panel)
+
+
+
+F
