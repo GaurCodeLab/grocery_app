@@ -2,6 +2,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart ';
 import 'package:grocery_app/models/products_model.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
+import 'package:grocery_app/provider/viewed_provider.dart';
 import 'package:grocery_app/provider/wishlist_provider.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/add_to_cart_dynamic_button.dart';
@@ -48,6 +49,7 @@ class _FeedWidgetState extends State<FeedWidget> {
         wishlistProvider.getWishlistItems.containsKey(productModel.id);
     Size size = Utils(context).getScreenSize;
     final Color color = Utils(context).color;
+    final viewedProvider = Provider.of<ViewedProvider>(context);
     return Material(
       borderRadius: BorderRadius.circular(30),
       color: Theme.of(context).cardColor,
@@ -93,6 +95,8 @@ class _FeedWidgetState extends State<FeedWidget> {
                               //     ctx: context, routeName: ProductDetails.routeName);
                               Navigator.pushNamed(context, ProductDetails.routeName,
                                   arguments: productModel.id);
+                              viewedProvider.addProductsToViewedItems(productId: productModel.id);
+
                             },
                             child: FancyShimmerImage(
                               imageUrl: productModel.imageUrl,
@@ -146,27 +150,7 @@ class _FeedWidgetState extends State<FeedWidget> {
                       height: 10.0,
                     ),
 
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: const [
-                    //     PriceWidget(
-                    //       price: 300,
-                    //       salePrice: 280,
-                    //       isOnSale: false,
-                    //       textPrice: 1,
-                    //     ),
-                    //     // const SizedBox(width: 20,),
-                    //
-                    //     // GestureDetector(
-                    //     //   onTap: () {},
-                    //     //   child: Icon(
-                    //     //     IconlyLight.plus,
-                    //     //     size: 22,
-                    //     //     color: color,
-                    //     //   ),
-                    //     // ),
-                    //   ],
-                    // ),
+
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:grocery_app/models/products_model.dart';
 import 'package:grocery_app/services/utils.dart';
@@ -34,6 +35,21 @@ class _AddToCartButtonState extends State<AddToCartButton> {
           // }
 
           cartProvider.addProductsToCart(productId: productModel.id, quantity: int.parse(widget.quantity) );
+
+          final snackBar = SnackBar(
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              contentType: ContentType.success,
+              title: isInCart ? 'Already in cart' : 'Added to cart',
+              message:
+              isInCart ? '' : '${productModel.title} added to cart',
+            ),
+          );
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
         //print("item and its quantity are : item : ${productModel.id}, quantity: ${widget.quantity}");
 
         },
@@ -54,75 +70,7 @@ class _AddToCartButtonState extends State<AddToCartButton> {
           textSize: 18,
         ),
       ),
-      // TextButton(
-      //   child: TextWidget(text: 'Add item', color: color, textSize: 18),
-      //   onPressed: () {
-      //     setState(() {
-      //       quantity++;
-      //     });
-      //   },
-      // )
-      //  Container(
-      //     decoration: BoxDecoration(
-      //       color: themeState.getDarkTheme
-      //           ? Colors.grey[900]
-      //           : Colors.grey[300],
-      //       borderRadius: BorderRadius.circular(30),
-      //       boxShadow: [
-      //         BoxShadow(
-      //           color: themeState.getDarkTheme
-      //               ? Colors.black
-      //               : Colors.grey.shade500,
-      //           offset: const Offset(2, 2),
-      //           blurRadius: 10,
-      //           spreadRadius: 0.5,
-      //         ),
-      //         BoxShadow(
-      //           color: themeState.getDarkTheme
-      //               ? Colors.grey.shade800
-      //               : Colors.white,
-      //           offset: const Offset(-2, -2),
-      //           blurRadius: 10,
-      //           spreadRadius: 0.5,
-      //         ),
-      //       ],
-      //     ),
-      //     child: Row(
-      //       mainAxisAlignment: MainAxisAlignment.center,
-      //       mainAxisSize: MainAxisSize.min,
-      //       crossAxisAlignment: CrossAxisAlignment.center,
-      //       children: [
-      //         IconButton(
-      //           icon: Icon(
-      //             Icons.remove_circle_rounded,
-      //             color: color,
-      //             size: 22,
-      //           ),
-      //           onPressed: () {
-      //             setState(() {
-      //               quantity--;
-      //             });
-      //           },
-      //         ),
-      //         Text(
-      //           quantity.toString(),
-      //           style: const TextStyle(fontSize: 18),
-      //         ),
-      //         IconButton(
-      //           icon: Icon(
-      //             Icons.add_circle_rounded,
-      //             color: color,
-      //             size: 22,
-      //           ),
-      //           onPressed: () {
-      //             setState(() {
-      //               quantity++;
-      //             });
-      //           },
-      //         ),
-      //       ],
-      //     ),
-      //   ),
+
     );
   }
 }

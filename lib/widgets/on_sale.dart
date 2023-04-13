@@ -1,9 +1,11 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/models/products_model.dart';
 import 'package:grocery_app/provider/cart_provider.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
+import 'package:grocery_app/provider/viewed_provider.dart';
 import 'package:grocery_app/provider/wishlist_provider.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/add_to_wishlist_btn.dart';
@@ -46,7 +48,20 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
     final cartProvider = Provider.of<CartProvider>(context);
     bool? _isInCart = cartProvider.getCartItems.containsKey(productModel.id);
     final wishlistProvider = Provider.of<WishlistProvider>(context);
-    bool? isInWishlist = wishlistProvider.getWishlistItems.containsKey(productModel.id);
+    bool? isInWishlist =
+        wishlistProvider.getWishlistItems.containsKey(productModel.id);
+    final viewedProvider = Provider.of<ViewedProvider>(context);
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        contentType: ContentType.success,
+        title: _isInCart ? 'Already in cart' : 'Added to cart',
+        message:
+        _isInCart ? '' : '${productModel.title} added to cart',
+      ),
+    );
 
     Size size = Utils(context).getScreenSize;
     return Material(
@@ -81,6 +96,7 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
 
             Navigator.pushNamed(context, ProductDetails.routeName,
                 arguments: productModel.id);
+            viewedProvider.addProductsToViewedItems(productId: productModel.id);
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0, top: 8.0),
@@ -113,7 +129,8 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                                 width: 70.0,
                               ),
                               AddToWishlistButton(
-                                productId: productModel.id, isInWishlist: isInWishlist,
+                                productId: productModel.id,
+                                isInWishlist: isInWishlist,
                               ),
                               const SizedBox(
                                 height: 20.0,
@@ -125,6 +142,10 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                                         cartProvider.addProductsToCart(
                                             productId: productModel.id,
                                             quantity: 1);
+
+                                        ScaffoldMessenger.of(context)
+                                          ..hideCurrentSnackBar()
+                                          ..showSnackBar(snackBar);
                                         //print("item: ${productModel.id}  ");
                                       },
                                 child: _isInCart

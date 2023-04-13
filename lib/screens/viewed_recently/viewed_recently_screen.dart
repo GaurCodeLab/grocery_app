@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/provider/dark_theme_provider.dart';
+import 'package:grocery_app/provider/viewed_provider.dart';
 import 'package:grocery_app/screens/viewed_recently/viewed_widget.dart';
 import 'package:grocery_app/services/global_methods.dart';
 import 'package:grocery_app/services/utils.dart';
@@ -18,8 +19,11 @@ class ViewedRecentlyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
     final themeState = Provider.of<DarkThemeProvider>(context);
-    bool _isEmpty = true;
-    return _isEmpty
+    final viewedProvider = Provider.of<ViewedProvider>(context);
+    final viewedItemsLists =
+        viewedProvider.getViewedItems.values.toList().reversed.toList();
+
+    return viewedItemsLists.isEmpty
         ? const EmptyScreen(
             title: "You haven't viewed anything recently!",
             subtitle: 'Browse all products :)',
@@ -43,8 +47,10 @@ class ViewedRecentlyScreen extends StatelessWidget {
                   onPressed: () {
                     GlobalMethods.warningDialog(
                         title: 'Empty cart',
-                        subtitle: 'Do you want to empty cart?',
-                        fct: () {},
+                        subtitle: 'Do you want to clear viewed history?',
+                        fct: () {
+                          viewedProvider.clearViewedItems();
+                        },
                         context: context);
                   },
                   icon: Icon(
@@ -54,19 +60,25 @@ class ViewedRecentlyScreen extends StatelessWidget {
                 ),
               ],
             ),
-            body: ListView.separated(
-                itemBuilder: (ctx, index) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 2, vertical: 6),
-                    child: ViewedRecentlyWidget(),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return Divider(
-                    color: color,
-                  );
-                },
-                itemCount: 10),
+            body: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.separated(
+                  itemBuilder: (ctx, index) {
+                    return Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
+                      child: ChangeNotifierProvider.value(
+                          value: viewedItemsLists[index],
+                          child: const ViewedRecentlyWidget()),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider(
+                      color: color,
+                    );
+                  },
+                  itemCount: viewedItemsLists.length),
+            ),
           );
   }
 }

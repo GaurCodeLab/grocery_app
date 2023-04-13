@@ -22,7 +22,7 @@ class WishlistWidget extends StatelessWidget {
     final productProvider = Provider.of<ProductsProvider>(context);
     final wishlistModel = Provider.of<WishlistModel>(context);
     final wishlistProvider = Provider.of<WishlistProvider>(context);
-    // final productModel = Provider.of<ProductModel>(context);
+
 
     final getCurrentProduct =
         productProvider.findProductById(wishlistModel.productId);
