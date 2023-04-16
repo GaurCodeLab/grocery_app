@@ -38,8 +38,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   Widget build(BuildContext context) {
     final themeState = Provider.of<DarkThemeProvider>(context);
     bool isDark = themeState.getDarkTheme;
-    final cartProvider = Provider.of<CartProvider>(context);
-    final cartItemsLists = cartProvider.getCartItems.values.toList().reversed.toList();
+
     return Scaffold(
       // appBar: AppBar(
       //   title: Text(_pages[_selectedIndex]['title']),
@@ -70,22 +69,27 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             label: 'Categories',
           ),
           BottomNavigationBarItem(
-            icon: badge.Badge(
-              badgeAnimation: const badge.BadgeAnimation.slide(
-                toAnimate: true,
-              ),
-              badgeStyle: badge.BadgeStyle(
-                shape: BadgeShape.circle,
-                badgeColor: Colors.blue,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              position: BadgePosition.topEnd(top: -7, end: -7),
-              badgeContent: FittedBox(
-                child: TextWidget(text: cartItemsLists.length.toString(), color: Colors.white, textSize: 15),
-              ),
-              child:
-                  Icon(_selectedIndex == 2 ? IconlyBold.buy : IconlyLight.buy),
-            ),
+            icon: Consumer<CartProvider>(builder: (_, mycart, ch) {
+              return badge.Badge(
+                badgeAnimation: const badge.BadgeAnimation.slide(
+                  toAnimate: true,
+                ),
+                badgeStyle: badge.BadgeStyle(
+                  shape: BadgeShape.circle,
+                  badgeColor: Colors.blue,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                position: BadgePosition.topEnd(top: -7, end: -7),
+                badgeContent: FittedBox(
+                  child: TextWidget(
+                      text: mycart.getCartItems.length.toString(),
+                      color: Colors.white,
+                      textSize: 15),
+                ),
+                child: Icon(
+                    _selectedIndex == 2 ? IconlyBold.buy : IconlyLight.buy),
+              );
+            }),
             label: "Cart",
           ),
           BottomNavigationBarItem(
