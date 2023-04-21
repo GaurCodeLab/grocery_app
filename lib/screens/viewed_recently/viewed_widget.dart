@@ -1,4 +1,5 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_app/inner_screens/product_details_screen.dart';
 import 'package:grocery_app/models/viewed_model.dart';
@@ -11,6 +12,8 @@ import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+
+import '../../consts/firebae_consts.dart';
 
 class ViewedRecentlyWidget extends StatefulWidget {
   const ViewedRecentlyWidget({Key? key}) : super(key: key);
@@ -60,6 +63,11 @@ class _ViewedRecentlyWidgetState extends State<ViewedRecentlyWidget> {
           child: isInCart
               ? IconButton(
                   onPressed: () {
+                    final User? user = authInstance.currentUser;
+                    if(user ==null){
+                      GlobalMethods.errorDialog(subtitle: 'No user found, login first', context: context);
+                      return;
+                    }
                     cartProvider.removeOneItem(getCurrentProduct.id);
 
                     final snackBar = SnackBar(

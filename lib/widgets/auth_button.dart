@@ -30,7 +30,9 @@ class AuthButton extends StatelessWidget {
             // Colors.grey[300],
             shape: NeumorphicShape.convex,
             intensity: 5),
-        onPressed: () {},
+        onPressed: () {
+          fct();
+          },
         child: Center(
           child: TextWidget(
             text: buttonText,

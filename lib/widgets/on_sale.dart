@@ -1,5 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/models/products_model.dart';
@@ -14,7 +15,9 @@ import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
+import '../consts/firebae_consts.dart';
 import '../inner_screens/product_details_screen.dart';
+import '../services/global_methods.dart';
 
 class OnSaleWidget extends StatefulWidget {
   const OnSaleWidget({super.key});
@@ -139,6 +142,11 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                                 onTap: _isInCart
                                     ? null
                                     : () {
+                                  final User? user = authInstance.currentUser;
+                                  if(user ==null){
+                                    GlobalMethods.errorDialog(subtitle: 'No user found, login first', context: context);
+                                    return;
+                                  }
                                         cartProvider.addProductsToCart(
                                             productId: productModel.id,
                                             quantity: 1);

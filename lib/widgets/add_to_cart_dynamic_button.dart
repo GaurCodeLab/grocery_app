@@ -1,12 +1,15 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:grocery_app/models/products_model.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../consts/firebae_consts.dart';
 import '../provider/cart_provider.dart';
 import '../provider/dark_theme_provider.dart';
+import '../services/global_methods.dart';
 
 class AddToCartButton extends StatefulWidget {
   const AddToCartButton({Key? key, required this.quantity}) : super(key: key);
@@ -33,7 +36,11 @@ class _AddToCartButtonState extends State<AddToCartButton> {
           // if(_isInCart) {
           //   return;
           // }
-
+          final User? user = authInstance.currentUser; 
+          if(user ==null){
+            GlobalMethods.errorDialog(subtitle: 'No user found, login first', context: context);
+            return;
+          }
           cartProvider.addProductsToCart(productId: productModel.id, quantity: int.parse(widget.quantity) );
 
           final snackBar = SnackBar(

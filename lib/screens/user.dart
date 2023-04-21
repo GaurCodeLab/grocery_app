@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:grocery_app/screens/auth/login_screen.dart';
 import 'package:grocery_app/screens/orders/orders_screen.dart';
 import 'package:grocery_app/screens/viewed_recently/viewed_recently_screen.dart';
 import 'package:grocery_app/screens/wishlist/wishlist_screen.dart';
@@ -11,6 +13,7 @@ import 'package:grocery_app/widgets/user_screen_listtile.dart';
 import 'package:provider/provider.dart';
 import 'package:grocery_app/widgets/show_address_alert_dialogue.dart';
 
+import '../consts/firebae_consts.dart';
 import '../provider/dark_theme_provider.dart';
 
 class UserScreen extends StatefulWidget {
@@ -21,6 +24,8 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+  final User? user = authInstance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     final themeState = Provider.of<DarkThemeProvider>(context);
@@ -102,7 +107,8 @@ class _UserScreenState extends State<UserScreen> {
                   title: 'Viewed',
                   onPressed: () {
                     GlobalMethods.navigateTo(
-                        ctx: context, routeName: ViewedRecentlyScreen.routeName);
+                        ctx: context,
+                        routeName: ViewedRecentlyScreen.routeName);
                   },
                   color: color,
                 ),
@@ -132,13 +138,23 @@ class _UserScreenState extends State<UserScreen> {
                       : Colors.grey[300],
                 ),
                 listTile(
-                  leadinIcon: IconlyLight.logout,
-                  title: 'Logout',
+                  leadinIcon:
+                      user == null ? IconlyLight.login : IconlyLight.logout,
+                  title: user == null ? 'Login' : 'Logout',
                   onPressed: () {
+                    if (user == null) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const LoginScreen()));
+                      return;
+                    }
                     GlobalMethods.warningDialog(
                         title: 'Logout',
                         subtitle: 'Do want to sign out?',
-                        fct: () {},
+                        fct: () async {
+                          await authInstance.signOut();
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const LoginScreen()));
+                        },
                         context: context);
                   },
                   color: color,
