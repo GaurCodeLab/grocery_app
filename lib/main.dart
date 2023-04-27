@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:grocery_app/fetch_screen.dart';
 import 'package:grocery_app/inner_screens/cat_inner_screen.dart';
 import 'package:grocery_app/inner_screens/product_details_screen.dart';
 import 'package:grocery_app/provider/cart_provider.dart';
@@ -98,7 +99,7 @@ class _MyAppState extends State<MyApp> {
                   debugShowCheckedModeBanner: false,
                   title: 'Grocery shop',
                   theme: Styles.themeData(themeProvider.getDarkTheme, context),
-                  home: const BottomBarScreen(),
+                  home: const FetchScreen(),
                   routes: {
                     OnSaleScreen.routeName: (ctx) => const OnSaleScreen(),
                     FeedsScreen.routeName: (ctx) => const FeedsScreen(),

@@ -31,6 +31,14 @@ class _FeedsScreenState extends State<FeedsScreen> {
     _searchTextFocusNode.dispose();
     super.dispose();
   }
+  // @override
+  // void initState(){
+  //   final productProvider = Provider.of<ProductsProvider>(context, listen: false);
+  //   productProvider.fetchProducts();
+  //   super.initState();
+  // }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -139,12 +147,14 @@ class _FeedsScreenState extends State<FeedsScreen> {
               crossAxisCount: 2,
               physics: const NeverScrollableScrollPhysics(),
               childAspectRatio: size.width / (size.height * 0.70),
-              children: List.generate(allProducts.length, (index) {
+              children:
+              List.generate(allProducts.length, (index) {
+
                 return ChangeNotifierProvider.value(
                   value: allProducts[index],
                   child: FeedWidget(),
                 );
-              }),
+              }, growable: false),
             ),
           ],
         ),

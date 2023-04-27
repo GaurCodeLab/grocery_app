@@ -61,8 +61,7 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
       content: AwesomeSnackbarContent(
         contentType: ContentType.success,
         title: _isInCart ? 'Already in cart' : 'Added to cart',
-        message:
-        _isInCart ? '' : '${productModel.title} added to cart',
+        message: _isInCart ? '' : '${productModel.title} added to cart',
       ),
     );
 
@@ -125,6 +124,9 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                           //   height: size.height * 0.12,
                           //   fit: BoxFit.fill,
                           // ),
+                          const SizedBox(
+                            width: 50,
+                          ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -142,11 +144,15 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                                 onTap: _isInCart
                                     ? null
                                     : () {
-                                  final User? user = authInstance.currentUser;
-                                  if(user ==null){
-                                    GlobalMethods.errorDialog(subtitle: 'No user found, login first', context: context);
-                                    return;
-                                  }
+                                        final User? user =
+                                            authInstance.currentUser;
+                                        if (user == null) {
+                                          GlobalMethods.errorDialog(
+                                              subtitle:
+                                                  'No user found, login first',
+                                              context: context);
+                                          return;
+                                        }
                                         cartProvider.addProductsToCart(
                                             productId: productModel.id,
                                             quantity: 1);

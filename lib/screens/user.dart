@@ -139,7 +139,8 @@ class _UserScreenState extends State<UserScreen> {
                     title: 'Address',
                     subtitle: _address,
                     onPressed: () async {
-                      await showAddressAlertDialogue(context, _addressTextController);
+                      await showAddressAlertDialogue(
+                          context, _addressTextController);
                       setState(() {
                         _address = _addressTextController.text;
                       });

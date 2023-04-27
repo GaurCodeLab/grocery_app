@@ -1,5 +1,6 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_app/consts/constss.dart';
@@ -13,6 +14,7 @@ import 'package:grocery_app/widgets/google_button.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 
 import '../../consts/firebae_consts.dart';
+import '../../fetch_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/LoginScreen';
@@ -63,8 +65,10 @@ class _LoginScreenState extends State<LoginScreen> {
             password: _passTextController.text.trim());
 
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const BottomBarScreen()));
-        print("succefully LoggedIn");
+            MaterialPageRoute(builder: (context) => const FetchScreen()));
+        if (kDebugMode) {
+          print("succefully LoggedIn");
+        }
       } on FirebaseAuthException catch (error) {
         GlobalMethods.errorDialog(
             subtitle: "${error.message}", context: context);

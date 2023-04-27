@@ -1,11 +1,13 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app/consts/constss.dart';
 import 'package:grocery_app/consts/firebae_consts.dart';
+import 'package:grocery_app/fetch_screen.dart';
 import 'package:grocery_app/screens/auth/login_screen.dart';
 import 'package:grocery_app/screens/bottom_bar_scren.dart';
 import 'package:grocery_app/services/global_methods.dart';
@@ -78,8 +80,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         });
 
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const BottomBarScreen()));
-        print("succefully registered");
+            MaterialPageRoute(builder: (context) => const FetchScreen()));
+        if (kDebugMode) {
+          print("successfully registered");
+        }
       } on FirebaseAuthException catch (error) {
         GlobalMethods.errorDialog(
             subtitle: "${error.message}", context: context);

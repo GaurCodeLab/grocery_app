@@ -104,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: SizedBox(
                       height: size.height * 0.22,
                       child: ListView.builder(
+                        cacheExtent: 1000,
                         itemCount: productsOnSale.length < 10
                             ? productsOnSale.length
                             : 10,

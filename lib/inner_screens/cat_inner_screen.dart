@@ -50,7 +50,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
         centerTitle: true,
         title: TextWidget(
           textSize: 20.0,
-          text: 'All products',
+          text: catName,
           color: color,
           isTitle: true,
         ),

@@ -5,7 +5,8 @@ import 'package:grocery_app/services/global_methods.dart';
 
 import '../consts/firebae_consts.dart';
 
-Future<dynamic> showAddressAlertDialogue(BuildContext context,TextEditingController addressTextController) {
+Future<dynamic> showAddressAlertDialogue(
+    BuildContext context, TextEditingController addressTextController) {
   //final TextEditingController addressTextController = TextEditingController();
   final User? user = authInstance.currentUser;
   return showDialog(
@@ -30,17 +31,15 @@ Future<dynamic> showAddressAlertDialogue(BuildContext context,TextEditingControl
             TextButton(
               onPressed: () async {
                 String _uid = user!.uid;
-                try{
-
-                  await FirebaseFirestore.instance.collection('users').doc(_uid).update(
-                      {'shipping-address' : addressTextController.text});
+                try {
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(_uid)
+                      .update({'shipping-address': addressTextController.text});
                   Navigator.pop(context);
-
-
-                }catch(err){
+                } catch (err) {
                   GlobalMethods.errorDialog(subtitle: '$err', context: context);
                 }
-
               },
               child: const Text('update'),
             ),
