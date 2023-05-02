@@ -1,3 +1,4 @@
+
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
@@ -12,6 +13,9 @@ import 'package:grocery_app/widgets/add_to_wishlist_btn.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/cart_provider.dart';
+import '../../services/global_methods.dart';
+
 class WishlistWidget extends StatelessWidget {
   const WishlistWidget({Key? key}) : super(key: key);
 
@@ -22,6 +26,7 @@ class WishlistWidget extends StatelessWidget {
     final productProvider = Provider.of<ProductsProvider>(context);
     final wishlistModel = Provider.of<WishlistModel>(context);
     final wishlistProvider = Provider.of<WishlistProvider>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
 
 
     final getCurrentProduct =
@@ -73,7 +78,12 @@ class WishlistWidget extends StatelessWidget {
                         child: Row(
                           children: [
                             IconButton(
-                              onPressed: () {
+                              onPressed: () async {
+                               await GlobalMethods.addToCart(
+                                    productId: getCurrentProduct.id,
+                                    quantity: 1,
+                                    context: context);
+                               await cartProvider.fetchCart();
                                 // cartProvider.addProductsToCart(
                                 //     productId: getCurrentProduct.id, quantity: 1);
                               },

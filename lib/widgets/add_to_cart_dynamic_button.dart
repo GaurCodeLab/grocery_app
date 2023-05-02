@@ -32,7 +32,7 @@ class _AddToCartButtonState extends State<AddToCartButton> {
       padding: const EdgeInsets.only(top: 8.0, left: 10),
       child: NeumorphicButton(
         onPressed: isInCart ? null
-          :() {
+          :() async {
           // if(_isInCart) {
           //   return;
           // }
@@ -41,7 +41,12 @@ class _AddToCartButtonState extends State<AddToCartButton> {
             GlobalMethods.errorDialog(subtitle: 'No user found, login first', context: context);
             return;
           }
-          cartProvider.addProductsToCart(productId: productModel.id, quantity: int.parse(widget.quantity) );
+         await GlobalMethods.addToCart(
+              productId: productModel.id,
+              quantity:int.parse(widget.quantity) ,
+              context: context);
+          await cartProvider.fetchCart();
+         // cartProvider.addProductsToCart(productId: productModel.id, quantity: int.parse(widget.quantity) );
 
           final snackBar = SnackBar(
             elevation: 0,

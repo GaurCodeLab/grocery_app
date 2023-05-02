@@ -31,16 +31,16 @@ class PriceWidget extends StatelessWidget {
         Visibility(
           visible: isOnSale ? true :false,
           child: Text(
-            '\u{20B9}$salePrice',
+            '\u{20B9}$price',
             style: TextStyle(
                 fontSize: 15,
                 color: color,
                 decoration: TextDecoration.lineThrough),
           ),
         ),
-        SizedBox(width: 5,),
+        const SizedBox(width: 5,),
         TextWidget(
-          text: '\u{20B9}$price',
+          text: '\u{20B9}$userPrice',
           color: Colors.green,
           textSize: 18,
           isTitle: true,

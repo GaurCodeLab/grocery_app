@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../provider/dark_theme_provider.dart';
 import '../services/utils.dart';
+import '../widgets/empty_product_list_screen.dart';
 import '../widgets/text_widget.dart';
 
 class FeedsScreen extends StatefulWidget {
@@ -24,6 +25,7 @@ class FeedsScreen extends StatefulWidget {
 class _FeedsScreenState extends State<FeedsScreen> {
   final TextEditingController _searchTextController = TextEditingController();
   final FocusNode _searchTextFocusNode = FocusNode();
+  List<ProductModel> listProductSearch = [];
 
   @override
   void dispose() {
@@ -31,12 +33,12 @@ class _FeedsScreenState extends State<FeedsScreen> {
     _searchTextFocusNode.dispose();
     super.dispose();
   }
-  // @override
-  // void initState(){
-  //   final productProvider = Provider.of<ProductsProvider>(context, listen: false);
-  //   productProvider.fetchProducts();
-  //   super.initState();
-  // }
+  @override
+  void initState(){
+    final productProvider = Provider.of<ProductsProvider>(context, listen: false);
+    productProvider.fetchProducts();
+    super.initState();
+  }
 
 
 
@@ -107,7 +109,9 @@ class _FeedsScreenState extends State<FeedsScreen> {
                     focusNode: _searchTextFocusNode,
                     controller: _searchTextController,
                     onChanged: (value) {
-                      setState(() {});
+                      setState(() {
+                        listProductSearch = productProviders.searchQuesry(value);
+                      });
                     },
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
@@ -139,7 +143,9 @@ class _FeedsScreenState extends State<FeedsScreen> {
                 ),
               ),
             ),
-            GridView.count(
+            _searchTextController.text.isNotEmpty &&   listProductSearch.isEmpty
+                ? const EmptyProductWidget(text: 'No product found, please try searching different product')
+            : GridView.count(
               crossAxisSpacing: 15,
               mainAxisSpacing: 15,
               shrinkWrap: true,
@@ -148,10 +154,15 @@ class _FeedsScreenState extends State<FeedsScreen> {
               physics: const NeverScrollableScrollPhysics(),
               childAspectRatio: size.width / (size.height * 0.70),
               children:
-              List.generate(allProducts.length, (index) {
+              List.generate(
+                  _searchTextController.text.isNotEmpty
+                      ? listProductSearch.length
+                 : allProducts.length, (index) {
 
                 return ChangeNotifierProvider.value(
-                  value: allProducts[index],
+                  value: _searchTextController.text.isNotEmpty
+                      ? listProductSearch[index]
+                 : allProducts[index],
                   child: FeedWidget(),
                 );
               }, growable: false),

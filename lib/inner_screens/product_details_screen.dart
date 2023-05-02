@@ -6,6 +6,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:grocery_app/provider/cart_provider.dart';
 import 'package:grocery_app/provider/products_provider.dart';
 import 'package:grocery_app/provider/wishlist_provider.dart';
+import 'package:grocery_app/services/global_methods.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/add_to_wishlist_btn.dart';
 import 'package:grocery_app/widgets/back_widget.dart';
@@ -285,13 +286,19 @@ class _ProductDetailsState extends State<ProductDetails> {
                             borderRadius: BorderRadius.circular(10),
                             onTap: isInCart
                                 ? null
-                                : () {
+                                : () async {
+                                    await GlobalMethods.addToCart(
+                                        productId: getCurrentProduct.id,
+                                        quantity: int.parse(
+                                            _quantityTextController.text),
+                                        context: context);
+                                    await cartProvider.fetchCart();
                                     // Add product to cart with product id and quantity from text controller as passing arguments
-                                    cartProvider.addProductsToCart(
-                                      productId: getCurrentProduct.id,
-                                      quantity: int.parse(
-                                          _quantityTextController.text),
-                                    );
+                                    // cartProvider.addProductsToCart(
+                                    //   productId: getCurrentProduct.id,
+                                    //   quantity: int.parse(
+                                    //       _quantityTextController.text),
+                                    // );
                                     // print(' item: ${productModel.id}, quantity: $_quantityTextController.text');
                                   },
                             child: Padding(

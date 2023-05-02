@@ -91,9 +91,14 @@ class _ViewedRecentlyWidgetState extends State<ViewedRecentlyWidget> {
                   ),
                 )
               : IconButton(
-                  onPressed: () {
-                    cartProvider.addProductsToCart(
-                        productId: getCurrentProduct.id, quantity: 1);
+                  onPressed: () async {
+                   await GlobalMethods.addToCart(
+                        productId: getCurrentProduct.id,
+                        quantity: 1,
+                        context: context);
+                   await cartProvider.fetchCart();
+                    // cartProvider.addProductsToCart(
+                    //     productId: getCurrentProduct.id, quantity: 1);
 
                     final snackBar = SnackBar(
                       elevation: 0,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:grocery_app/models/products_model.dart';
 
 class ProductsProvider with ChangeNotifier {
+  static  List<ProductModel> _productsList = [];
   List<ProductModel> get getProducts {
     return _productsList;
   }
@@ -17,6 +18,7 @@ class ProductsProvider with ChangeNotifier {
         .collection('products')
         .get()
         .then((QuerySnapshot productSnapshot) {
+          _productsList = [];
       for (var element in productSnapshot.docs) {
         _productsList.insert(
             0,
@@ -46,8 +48,16 @@ class ProductsProvider with ChangeNotifier {
         .toList();
     return _categoryList;
   }
+  List<ProductModel> searchQuesry(String searchText) {
+    List<ProductModel> _searchList = _productsList
+        .where((element) => element.title
+        .toLowerCase()
+        .contains(searchText.toLowerCase(),),)
+        .toList();
+    return _searchList;
+  }
 
-  static final List<ProductModel> _productsList = [];
+
 
 // static final List<ProductModel> _productsList = [
 //   ProductModel(
